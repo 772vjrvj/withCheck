@@ -91,7 +91,7 @@
 		<!--   V습관달력 만들기 값 입력 habitCalInsert -->
 		<insert id="habitCalInsert" parameterType="HcDto">
         INSERT INTO HCBOARD
-        VALUES (#{pKey},#{id},#{title},#{content},#{stDate},#{edDate},#{term},SYSDATE,'N',#{calWith},#{withh},#{progress},#{recruit},#{photo},'N',#{host},'0','1')
+        VALUES (#{pKey},#{id},#{title},#{content},#{stDate},#{edDate},#{term},SYSDATE,'N',#{calWith},#{withh},#{progress},#{recruit},#{photo},'N','Y','0','1')
 		</insert>
 
 		<!--	V함께하기를 만들면 각 날짜의 아이디의 인증 페이지 필요 insertHcInChk -->
@@ -106,6 +106,12 @@
 		UPDATE HCBOARD SET SORT=#{sort} WHERE PKEY=#{pKey}
 		</update>
 
+		<!--	V습관달력 한개 구하기 -->
+		<select id="getHabitCalListOne" parameterType="Map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCBOARD WHERE PKEY=#{pKey} AND ID=#{id}
+		</select>  
+
 		<!--	V체크 값 가저오기 habitCalTakeChk -->
 		<select id="habitCalTakeChk" resultType="String" parameterType="String">
 		SELECT CHK
@@ -113,60 +119,42 @@
 		WHERE PKEY=#{pKey}   
 		</select>
 
-
-
-		<!--       	습관달력 한개 구하기 -->
-		<select id="getHabitCalListOne" parameterType="Map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCBOARD WHERE PKEY=#{pKey} AND ID=#{id}
-		</select>  
-   		
+		<!--	V습관달력 삭제 -->
+		<delete id="habitCalChkDelete" parameterType="Map" >
+		DELETE HCCHKBOARD
+		WHERE PKEY=#{pKey} AND CHK=#{chk}
+		</delete>
 		
-		<!--   체크 값 입력 habitCalInsertChk -->
-		<insert id="habitCalInsertChk" parameterType="HcChkDto">
-		INSERT INTO HCCHKBOARD (PKEY,CHK)
-		SELECT #{pKey},#{chk} FROM DUAL
-		WHERE NOT EXISTS(SELECT * FROM HCCHKBOARD  WHERE PKEY=#{pKey} AND CHK=#{chk})     
-		</insert>
-		
-
-
-
-		<!--   체크 갯수 세기 habitCalChkCount -->
+		<!--	V체크 갯수 세기 habitCalChkCount -->
         <select id="habitCalChkCount" resultType="Integer" parameterType="String">
 		SELECT COUNT(*) FROM HCCHKBOARD 
 		WHERE PKEY=#{pKey}
         </select> 
 
-		<!-- 		습관달력 삭제 -->
-		<delete id="habitCalChkDelete" parameterType="Map" >
-		DELETE HCCHKBOARD
-		WHERE PKEY=#{pKey} AND CHK=#{chk}
-		</delete>
-
-
-
-		<!-- 혼자 하기에서 공개 비공개 여부 설정 -->
-		<update id="updateCalWith" parameterType="HcDto" >
-		UPDATE HCBOARD SET CALWITH=#{calWith} WHERE PKEY=#{pKey}
-		</update>
-		
-		
-		<!-- 체크 갯수 업데이트 -->
+		<!--	V체크 갯수 업데이트 -->
 		<update id="updateChkCount" parameterType="HcDto" >
 		UPDATE HCBOARD SET CHKCOUNT=#{chkCount} WHERE PKEY=#{pKey}
 		</update>
-		
 
-		
-	
-				
+		<!--	V체크 값 입력 habitCalInsertChk -->
+		<insert id="habitCalInsertChk" parameterType="HcChkDto">
+		INSERT INTO HCCHKBOARD (PKEY,CHK)
+		SELECT #{pKey},#{chk} FROM DUAL
+		WHERE NOT EXISTS(SELECT * FROM HCCHKBOARD  WHERE PKEY=#{pKey} AND CHK=#{chk})     
+		</insert>
+
+		<!--	V혼자 하기에서 공개 비공개 여부 설정 -->
+		<update id="updateCalWith" parameterType="HcDto" >
+		UPDATE HCBOARD SET CALWITH=#{calWith} WHERE PKEY=#{pKey}
+		</update>
+
+		<!--	V해당 아이디 습관달력 삭제 -->
+		<delete id="habitCalDelete" parameterType="Map" >
+		DELETE HCBOARD
+		WHERE PKEY=#{pKey} AND ID=#{id}
+		</delete>
 
 
-      
-    
-      
-  
       	
 
 		<!-- 		탈퇴하기 -->
@@ -211,11 +199,7 @@
 
 
 		
-		<!-- 		해당 아이디 습관달력 삭제 -->
-		<delete id="habitCalDelete" parameterType="Map" >
-		DELETE HCBOARD
-		WHERE PKEY=#{pKey} AND ID=#{id}
-		</delete>
+
 
 
  

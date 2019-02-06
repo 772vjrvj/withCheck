@@ -26,6 +26,11 @@ public class Util {
 		return msg.length()<2?"0"+msg:msg;
 	}
 	
+	public static String isTwoInt(int msg) {
+		String msg1=msg+""; 
+		return msg1.length()<2?"0"+msg1:msg1;
+	}
+	
 	//V종료일 구하기 연,월,일,기간을 받음
 	public static String edDate(String year,String month,String day, String term) {
 		
@@ -181,18 +186,6 @@ public class Util {
 		return map;
 	}			
 	
-	
-	
-	//tr을 줄지td를 줄자를 결정
-	public static boolean trtd(int i,int n) {
-		
-		if((i-1+n)%7==0) {
-			return true;
-		}else {
-			return false;
-		}
-		
-	}	
 
 	//토요일 파랑 일요일 빨강 그외에 검은색 달력날짜 색깔
 	public static String fontColor(int dayOfWeek, int i) {

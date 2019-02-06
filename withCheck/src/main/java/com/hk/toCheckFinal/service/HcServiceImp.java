@@ -150,41 +150,49 @@ public class HcServiceImp implements IHcService {
 		return hcDao.habitCalTakeChk(pKey);
 	}	
 	
-	
-	
-	
-	
-	//체크 값 입력
-	@Override	
-	public boolean habitCalInsertChk(String pKey,String chk) {
-		return hcDao.habitCalInsertChk(pKey,chk);
+	//V체크 삭제하기
+	@Override
+	public boolean habitCalChkDelete(String pKey,String chk) {
+    	System.out.println("HcServiceImp habitCalChkDelete");						      						
+	      return hcDao.habitCalChkDelete(pKey,chk);
 	}	
 	
-	//혼자하기 공개 비공개 여부
-	@Override
-	public boolean updateCalWith(HcDto HcDto) {
-		return hcDao.updateCalWith(HcDto);
-	
-	}
-	
-
-	
-    
-
-
-
-    
-
-    
-
-    
-
-    
-	//참자가 인원세기
+	//V체크 값 세기
     @Override
 	public int habitCalChkCount(String pKey) {
+    	System.out.println("HcServiceImp habitCalChkCount");						      						    	
     	return hcDao.habitCalChkCount(pKey);
-    }
+    }	
+	
+	//V체크 갯수 업데이트
+	public boolean updateChkCount(HcDto HcDto) {
+    	System.out.println("HcServiceImp updateChkCount");						      						    			
+		return hcDao.updateChkCount(HcDto);
+	}	    
+    
+	//V체크 값 입력
+	@Override	
+	public boolean habitCalInsertChk(String pKey,String chk) {
+    	System.out.println("HcServiceImp habitCalInsertChk");						      						    					
+		return hcDao.habitCalInsertChk(pKey,chk);
+	}	    
+    
+	//V혼자하기 공개 비공개 여부
+	@Override
+	public boolean updateCalWith(HcDto HcDto) {
+    	System.out.println("HcServiceImp updateCalWith");						      						    							
+		return hcDao.updateCalWith(HcDto);
+	
+	}    
+    
+	//V해당 아이디 습관달력 삭제
+	@Override
+	public boolean habitCalDelete(String pKey,String id) {
+    	System.out.println("HcServiceImp habitCalDelete");						      						    									
+		return hcDao.habitCalDelete(pKey,id);
+	}	
+	
+	
     
     //유저 정보 변경
     @Override
@@ -231,11 +239,7 @@ public class HcServiceImp implements IHcService {
 	
 
 	
-	//해당 아이디 습관달력 삭제
-	@Override
-	public boolean habitCalDelete(String pKey,String id) {
-		return hcDao.habitCalDelete(pKey,id);
-	}	
+
 
 
 		
@@ -272,17 +276,9 @@ public class HcServiceImp implements IHcService {
 		return hcDao.getHcInChk(HcInChkDto);
 	}
 
-	//체크 삭제하기
-	@Override
-	public boolean habitCalChkDelete(String pKey,String chk) {
-	      return hcDao.habitCalChkDelete(pKey,chk);
-		
-	}
+
 	
-	//체크 갯수 업데이트
-	public boolean updateChkCount(HcDto HcDto) {
-		return hcDao.updateChkCount(HcDto);
-	}
+
 	
 	
 	@Override

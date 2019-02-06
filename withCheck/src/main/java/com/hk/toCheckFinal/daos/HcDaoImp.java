@@ -198,14 +198,40 @@ public class HcDaoImp implements IHcDao {
 		return list;
 	}
 	
-	
+	//V체크 삭제하기
+	@Override
+	public boolean habitCalChkDelete(String pKey,String chk) {
+		System.out.println("HcDaoImp habitCalChkDelete");												
+		Map<String, String> map = new HashMap<String, String>();
+		map.put( "pKey", pKey );
+		map.put( "chk", chk );
+		int count = 0;
+		count=sqlSession.delete(namespace+"habitCalChkDelete", map);
+		System.out.println("HcDaoImp habitCalChkDelete count" + count);												
+		
+		return count > 0 ? true : false;		
+	}	
 
-	//체크 값 입력
+	//V체크 갯수 세기
+	@Override
+	public int habitCalChkCount(String pKey) {
+		System.out.println("HcDaoImp habitCalChkCount");														
+		int count=sqlSession.selectOne(namespace+"habitCalChkCount", pKey);
+		return count;
+	}
+	
+	//V체크 갯수 업데이트
+	public boolean updateChkCount(HcDto HcDto) {
+		System.out.println("HcDaoImp updateChkCount");																
+	      int count = 0;
+	      count=sqlSession.update(namespace+"updateChkCount", HcDto);
+	      return count > 0 ? true : false;
+	}   	
+	
+	//V체크 값 입력
 	@Override	
 	public boolean habitCalInsertChk(String pKey,String chk) {
-		System.out.println("pKey:"+pKey);
-		System.out.println("chk:"+chk);
-
+		System.out.println("HcDaoImp habitCalInsertChk");																
 		Map<String, String> map = new HashMap<String, String>();
 		map.put( "pKey", pKey );
 		map.put( "chk", chk );
@@ -213,36 +239,30 @@ public class HcDaoImp implements IHcDao {
 		count =sqlSession.insert(namespace+"habitCalInsertChk", map);
 		return count>0?true:false;
 	}
-
-	//혼자하기 공개 비공개 여부
+	
+	//V혼자하기 공개 비공개 여부
 	@Override
 	public boolean updateCalWith(HcDto HcDto) {
+		System.out.println("HcDaoImp updateCalWith");																
 		int count=0;
 		count =sqlSession.update(namespace+"updateCalWith", HcDto);
 		return count>0?true:false;		
-	}
+	}	
 	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-	//체크 갯수 세기
+	//V해당 아이디 습관달력 삭제
 	@Override
-	public int habitCalChkCount(String pKey) {
-		int count=sqlSession.selectOne(namespace+"habitCalChkCount", pKey);
-		return count;
-	}
-	
+	public boolean habitCalDelete(String pKey,String id) {
+		System.out.println("HcDaoImp habitCalDelete");																		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put( "pKey", pKey );
+		map.put( "id", id );
+		int count=0;
+		count=sqlSession.delete(namespace+"habitCalDelete",map);
+		return count>0?true:false;
+	}   	
 
-	
+
+
 	
 	
 	//유저 정보 변경
@@ -316,16 +336,7 @@ public class HcDaoImp implements IHcDao {
 	
 	
    
-	//해당 아이디 습관달력 삭제
-	@Override
-	public boolean habitCalDelete(String pKey,String id) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put( "pKey", pKey );
-		map.put( "id", id );
-		int count=0;
-		count=sqlSession.delete(namespace+"habitCalDelete",map);
-		return count>0?true:false;
-	}   
+
 
 	
 	
@@ -364,16 +375,7 @@ public class HcDaoImp implements IHcDao {
 		return list;      
 	}
 
-	//체크 삭제하기
-	@Override
-	public boolean habitCalChkDelete(String pKey,String chk) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put( "pKey", pKey );
-		map.put( "chk", chk );
-		int count = 0;
-		count=sqlSession.delete(namespace+"habitCalChkDelete", map);
-		return count > 0 ? true : false;		
-	}
+
 	
 	
    
@@ -406,12 +408,7 @@ public class HcDaoImp implements IHcDao {
 
 
 
-	//체크 갯수 업데이트
-	public boolean updateChkCount(HcDto HcDto) {
-	      int count = 0;
-	      count=sqlSession.update(namespace+"updateChkCount", HcDto);
-	      return count > 0 ? true : false;
-	}   
+
 
 
 

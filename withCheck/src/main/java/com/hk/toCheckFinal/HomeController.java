@@ -454,19 +454,172 @@ public class HomeController implements ServletContextAware {
         
 		List<String> chkList=hcService.habitCalTakeChk(pKey);
 		
-        long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
-
-        view.addObject("diffdays",diffdays);     
         view.addObject("chkList",chkList);
         view.addObject("dto",dto);   
         view.addObject("map",map);
         view.addObject("id",id); 
         view.setViewName("habitCalAloneDetail");
         	 
-        return view;         
-        	 
+        return view;          
 	}    		
 	
+
+	//V모든 회원들의 '함께' 하기 리스트 상세보기 로그인 사용자 보기 수정불가
+	@RequestMapping(value = "/habitCalWithDetail.do", method = RequestMethod.GET)
+	public ModelAndView habitCalWithDetail(String id, String pKey, Locale locale) throws ParseException {
+		logger.info("habitCalWithDetail {}.", locale);
+		ModelAndView view = new ModelAndView();
+		
+		HcDto dto = hcService.getHabitCalListOne(pKey,id);
+        
+		long diffdays=Util.doDiffOfDate(dto.getStDate());
+		//시작일 =< 오늘날짜  =< 종료일 && 함께하기 상태인 경우
+		int stDate=Integer.parseInt(dto.getStDate());
+		int edDate=Integer.parseInt(dto.getEdDate());
+		
+		if(today1>=stDate&&today1<=edDate) {
+        	  
+				Map<String, Integer> map= Util.TodayYYMMDD();
+				//인증하기 해당 날짜에 해당 목록
+				List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, today1+""));
+				view.addObject("list",list);
+				view.addObject("diffdays",diffdays);
+				view.addObject("map",map);
+				view.addObject("dto",dto);
+				view.setViewName("photoInChk");
+
+			return view;
+			
+		}else{
+
+    		Map<String, Integer> map =Util.DetailYYMMDD(dto);
+    		List<HcDto> list = hcService.getHabitCalList(pKey);
+    		int intoPer=hcService.habitCalIntoPerCount(pKey);
+    		List<String> chkList=hcService.habitCalTakeChk(pKey);
+    		view.addObject("diffdays",-diffdays);
+            view.addObject("dto",dto);   
+            view.addObject("map",map);
+            view.addObject("intoPer",intoPer);
+            view.addObject("chkList",chkList);
+            view.addObject("list",list);//참가자들
+            
+            view.setViewName("habitCalWithDetail");
+            	 
+            return view;        
+		}        
+
+	}	
+	
+	//V혼자 하기 공개 비공개 & 체크값 입력
+	@RequestMapping(value = "/insertCheck.do", method = RequestMethod.POST)
+	public String insertCheck(String pKey, String id, String[] chk, String switchCheck, Locale locale, Model model) {
+		logger.info("insertCheck {}.", locale);
+		
+		HcLoginDto HcLoginDto= hcService.getUser(id);
+		//오늘 날짜 값만 넘어온다. 나머지는 disabled돼있어서 안넘어옴
+		if(chk==null){
+			boolean isS1=hcService.habitCalChkDelete(pKey,today);
+			if(isS1==true) {
+				System.out.println("habitCalChkDelete값삭제 성공");
+				//체크 삭제 후 현재 체크 갯수 세기
+				int chkCount =hcService.habitCalChkCount(pKey);
+				//갯수 세고 그 값으로 업데이트 시키기
+				boolean isS2=hcService.updateChkCount(new HcDto(pKey,chkCount));
+				
+				if(isS2==true) {
+					System.out.println("updateChkCount값삭제 성공");
+				}else {
+					System.out.println("updateChkCount값삭제 성공");
+				}
+				
+			}else {
+				System.out.println("habitCalChkDelete값 이미 삭제 됨");
+			}
+		}else {
+
+			if(chk[chk.length-1].equals(today)) {
+				boolean isS=hcService.habitCalInsertChk(pKey,today);
+				if(isS==true) {
+					System.out.println("habitCalInsertChk값입력 성공");
+					int chkCount =hcService.habitCalChkCount(pKey);
+					
+					boolean isS1=hcService.updateChkCount(new HcDto(pKey,chkCount));
+					
+					if(isS1==true) {
+						System.out.println("updateChkCount값입력 성공");
+					}else {
+						System.out.println("updateChkCount값입력 성공");
+					}
+					
+				}else {
+					System.out.println("habitCalInsertChk값입력 실패");
+				}
+			}else {
+				boolean isS1=hcService.habitCalChkDelete(pKey,today);
+				if(isS1==true) {
+					System.out.println("habitCalChkDelete값삭제 성공");
+					int chkCount =hcService.habitCalChkCount(pKey);
+					
+					boolean isS2=hcService.updateChkCount(new HcDto(pKey,chkCount));
+					
+					if(isS2==true) {
+						System.out.println("updateChkCount값삭제 성공");
+					}else {
+						System.out.println("updateChkCount값삭제 성공");
+					}
+					
+				}else {
+					System.out.println("habitCalChkDelete값삭제  실패");
+				}
+			}
+		}
+         
+		if(switchCheck==null) {
+			switchCheck="N";
+		}else {
+			switchCheck="Y";
+		}
+         
+		boolean isS=hcService.updateCalWith(new HcDto(pKey,switchCheck));
+
+		if(isS){
+
+			return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();
+
+		}else{
+			model.addAttribute("msg","삭제에 실패 했습니다.");
+            return "error";
+		}
+         
+	}     
+	
+	//V혼자 하기 상세보기 삭제
+	@RequestMapping(value = "/habitCalDeleteAlone.do", method = RequestMethod.GET)
+	public String habitCalDeleteAlone(String pKey, String id,String which, Locale locale, Model model) {
+		logger.info("habitCalDelete {}.", locale);
+      
+		boolean isS  = hcService.habitCalDelete(pKey,id);
+		HcLoginDto HcLoginDto=hcService.getUser(id);
+		
+			if(isS==true){
+				
+				if(which.equals("main")) {
+					return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();		
+				}else if(which.equals("boardListWith")) {
+					return "redirect:boardListWith.do";
+				}else if(which.equals("completeList")) {
+					return "redirect:habitCalCompleteList.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();				
+				}else {
+					model.addAttribute("msg","이동에 실패했습니다.");
+					return "error";    
+				}
+				
+			}else{
+				model.addAttribute("msg","삭제에 실패 했습니다.");
+				return "error";            
+			}
+
+	}   		
 	
 	
 	//혼자 함께 선택selectform
@@ -478,8 +631,6 @@ public class HomeController implements ServletContextAware {
 	}     	
 	
 	
-   
-  
 
 	//현재 진행중인 리스트 평균 각각 퍼센트 구하기
 	@RequestMapping(value = "/totalPer.do", method = RequestMethod.GET)
@@ -717,53 +868,7 @@ public class HomeController implements ServletContextAware {
 	
 
 	
-	//모든 회원들의 '함께' 하기 리스트 상세보기 로그인 사용자 보기 수정불가
-	@RequestMapping(value = "/habitCalWithDetail.do", method = RequestMethod.GET)
-	public ModelAndView habitCalWithDetail(String id, String pKey, Locale locale) throws ParseException {
-		logger.info("habitCalWithDetail {}.", locale);
-		ModelAndView view = new ModelAndView();
-		
-		HcDto dto = hcService.getHabitCalListOne(pKey,id);
-        
-		long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
-		//시작일 =< 오늘날짜  =< 종료일 && 함께하기 상태인 경우
-        
-		if(diffdays>=1 && diffdays<=Integer.parseInt(dto.getTerm())) {
-        	  
-			
 
-				Map<String, Integer> map= Util.TodayYYMMDD();
-				//인증하기 해당 날짜에 해당 목록
-				List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, today1+""));
-				view.addObject("list",list);
-				view.addObject("diffdays",diffdays);
-				view.addObject("map",map);
-				view.addObject("dto",dto);
-				view.setViewName("photoInChk");
-
-			
-        	 
-			return view;
-			
-		}else{
-
-    		Map<String, Integer> map =Util.DetailYYMMDD(dto);
-    		List<HcDto> list = hcService.getHabitCalList(pKey);
-    		int intoPer=hcService.habitCalIntoPerCount(pKey);
-    		List<String> chkList=hcService.habitCalTakeChk(pKey);
-    		view.addObject("diffdays",-(diffdays-1));
-            view.addObject("dto",dto);   
-            view.addObject("map",map);
-            view.addObject("intoPer",intoPer);
-            view.addObject("chkList",chkList);
-            view.addObject("list",list);//참가자들
-            
-            view.setViewName("habitCalWithDetail");
-            	 
-            return view;        
-		}        
-
-	}
 
 	
 	//모든 회원들의 '함께' 하기 리스트 상세보기 로그인 사용자 보기 수정불가
@@ -956,119 +1061,7 @@ public class HomeController implements ServletContextAware {
 
 	} 
 	
-	@RequestMapping(value = "/habitCalDeleteAlone.do", method = RequestMethod.GET)
-	public String habitCalDeleteAlone(String pKey, String id,String which, Locale locale, Model model) {
-		logger.info("habitCalDelete {}.", locale);
-      
-		boolean isS  = hcService.habitCalDelete(pKey,id);
-		HcLoginDto HcLoginDto=hcService.getUser(id);
-		//인증페이지 다 삭제
-		
-			if(isS==true){
-				
-				if(which.equals("main")) {
-					return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();		
-				}else if(which.equals("boardListWith")) {
-					return "redirect:boardListWith.do";
-				}else if(which.equals("completeList")) {
-					return "redirect:habitCalCompleteList.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();				
-				}else {
-					model.addAttribute("msg","이동에 실패했습니다.");
-					return "error";    
-				}
-				
-			}else{
-				model.addAttribute("msg","삭제에 실패 했습니다.");
-				return "error";            
-			}
 
-	}   	
-	
-	
-      
-	//혼자 하기 공개 비공개 & 체크값 입력
-	@RequestMapping(value = "/insertCheck.do", method = RequestMethod.POST)
-	public String insertCheck(String pKey, String id, String[] chk, String switchCheck, Locale locale, Model model) {
-		logger.info("insertCheck {}.", locale);
-      
-		HcLoginDto HcLoginDto= hcService.getUser(id);
-		if(chk==null){
-			boolean isS1=hcService.habitCalChkDelete(pKey,today);
-			if(isS1==true) {
-				System.out.println("habitCalChkDelete값삭제 성공");
-				int chkCount =hcService.habitCalChkCount(pKey);
-				
-				boolean isS2=hcService.updateChkCount(new HcDto(pKey,chkCount));
-				
-				if(isS2==true) {
-					System.out.println("updateChkCount값삭제 성공");
-				}else {
-					System.out.println("updateChkCount값삭제 성공");
-				}
-				
-			}else {
-				System.out.println("habitCalChkDelete값삭제  실패");
-			}
-		}else {
-
-			if(chk[chk.length-1].equals(today)) {
-				boolean isS=hcService.habitCalInsertChk(pKey,today);
-				if(isS==true) {
-					System.out.println("habitCalInsertChk값입력 성공");
-					int chkCount =hcService.habitCalChkCount(pKey);
-					
-					boolean isS1=hcService.updateChkCount(new HcDto(pKey,chkCount));
-					
-					if(isS1==true) {
-						System.out.println("updateChkCount값입력 성공");
-					}else {
-						System.out.println("updateChkCount값입력 성공");
-					}
-					
-				}else {
-					System.out.println("habitCalInsertChk값입력 실패");
-				}
-			}else {
-				boolean isS1=hcService.habitCalChkDelete(pKey,today);
-				if(isS1==true) {
-					System.out.println("habitCalChkDelete값삭제 성공");
-					int chkCount =hcService.habitCalChkCount(pKey);
-					
-					boolean isS2=hcService.updateChkCount(new HcDto(pKey,chkCount));
-					
-					if(isS2==true) {
-						System.out.println("updateChkCount값삭제 성공");
-					}else {
-						System.out.println("updateChkCount값삭제 성공");
-					}
-					
-				}else {
-					System.out.println("habitCalChkDelete값삭제  실패");
-				}
-			}
-		}
-		
-		
-         
-		if(switchCheck==null) {
-			switchCheck="N";
-		}else {
-			switchCheck="Y";
-		}
-         
-		boolean isS=hcService.updateCalWith(new HcDto(pKey,switchCheck));
-
-		if(isS){
-
-			return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();
-
-		}else{
-			model.addAttribute("msg","삭제에 실패 했습니다.");
-            return "error";
-		}
-         
-	}      
-      
 
 	//종료일이 지난 모든 리스트들 가저오기
 	@RequestMapping(value = "/habitCalCompleteList.do", method = RequestMethod.GET)

@@ -67,32 +67,25 @@ public interface IHcDao {
 	//V체크 값들 가저오기
 	public List<String> habitCalTakeChk(String pKey);	
 	
+	//V체크 삭제하기
+	public boolean habitCalChkDelete(String pKey,String chk);
 
-	
-
-	//체크 값 입력
+	//V체크 값 세기
+	public int habitCalChkCount(String pKey);	
+		
+	//V체크 갯수 업데이트
+	public boolean updateChkCount(HcDto HcDto);   
+		
+	//V체크 값 입력
 	public boolean habitCalInsertChk(String pKey,String chk);
 
-	//체크 값 세기
-	public int habitCalChkCount(String pKey);	
-	
-
-	//체크 갯수 업데이트
-	public boolean updateChkCount(HcDto HcDto);   
-	
-	//혼자하기 공개 비공개 여부
+	//V혼자하기 공개 비공개 여부
 	public boolean updateCalWith(HcDto dto);
 	
-	
-	
+	//V해당 아이디 습관달력 삭제
+	public boolean habitCalDelete(String pKey,String id);	
 
 
-
-
-
-
-
-	
 
 	//유저 정보 변경
 	public boolean updateUser(HcLoginDto dto);
@@ -118,8 +111,6 @@ public interface IHcDao {
 	public boolean deleteHcInChk(String pKey,String id);   
 
 
-	//해당 아이디 습관달력 삭제
-	public boolean habitCalDelete(String pKey,String id);	
 
 
 	//종료일이 지난 모든 리스트들 가저오기
@@ -134,10 +125,7 @@ public interface IHcDao {
 	//해당일 인증해야 하는 것들 다 가지고 오기
 	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto);
 
-	//체크 삭제하기
-	public boolean habitCalChkDelete(String pKey,String chk);
 
-	
 	
 	
 	

@@ -70,7 +70,7 @@
 <body>
 <div id="backimg"></div>
  	 <div id="container">
- 	 <h1>GET GOALS</h1>
+ 	 <h1>With Check</h1>
       <form action="login_after.do" method="post">
          <table id="inputText" style="border-spacing: 50px 50px">
             <col width="400px">
