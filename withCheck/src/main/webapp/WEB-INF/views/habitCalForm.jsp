@@ -202,7 +202,7 @@
 </script>
 <body>
 <div id="container">
-<h2 style="text-align: center;">My Goal</h2>
+<h2 style="text-align: center;">With Check</h2>
 <form action="habitCalInsert.do" method="post">
 	<input type="hidden" name="id" value="${HcLoginDto.id}"/>
 	<input type="hidden" name="photo" value=""/>

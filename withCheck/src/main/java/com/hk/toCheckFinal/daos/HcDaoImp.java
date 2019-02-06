@@ -261,8 +261,86 @@ public class HcDaoImp implements IHcDao {
 		return count>0?true:false;
 	}   	
 
+	//V해당 아이디 인증 페이지들 모두 삭제
+	@Override
+	public boolean deleteHcInChk(String pKey,String id) {
+		System.out.println("HcDaoImp deleteHcInChk");																				
+		Map<String, String> map = new HashMap<String, String>();
+		map.put( "pKey", pKey );
+		map.put( "id", id );
+		int count = 0;
+		count=sqlSession.update(namespace+"deleteHcInChk", map);
+		return count > 0 ? true : false;
+	}
 
+	//V모든 회원들의 '혼자' 하기 리스트 보기
+	@Override
+	public List<HcDto> getAllHcListAlone() {
+		System.out.println("HcDaoImp getAllHcListAlone");																						
+		List<HcDto>list=new ArrayList<HcDto>();
 
+		list=sqlSession.selectList(namespace+"getAllHcListAlone");
+		return list;
+	}	
+	
+	//V모든 회원들의 '함께' 하기 리스트 보기
+	@Override
+	public List<HcDto> getAllHcListWith() {
+		System.out.println("HcDaoImp getAllHcListWith");																								
+		List<HcDto>list=new ArrayList<HcDto>();
+
+		list=sqlSession.selectList(namespace+"getAllHcListWith");
+		return list;
+	}   	
+	
+	//V아이디 검색
+	@Override
+	public List<HcDto> getSearchID(String searchId, String withh) {
+		System.out.println("HcDaoImp getSearchID");																								
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("id", searchId);
+		map.put("withh", withh);
+		System.out.println("id:"+searchId+withh);
+
+		return sqlSession.selectList(namespace+"getSearchID",map);
+	}
+   
+	//V제목 검색
+	@Override
+	public List<HcDto> getSearchTitle(String searchTitle, String withh) {
+		System.out.println("HcDaoImp getSearchTitle");																										
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("title", searchTitle);
+		map.put("withh", withh);
+		System.out.println("title:"+searchTitle+withh);
+		return sqlSession.selectList(namespace+"getSearchTitle",map);
+	};
+   
+	//V기간 검색
+	@Override
+	public List<HcDto> getSearchTerm(String searchTerm, String withh) {
+		System.out.println("HcDaoImp getSearchTerm");																												
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("term", searchTerm);
+		map.put("withh", withh);
+		System.out.println("term:"+searchTerm+withh);
+		return sqlSession.selectList(namespace+"getSearchTerm",map);
+	};
+
+	//V시작일 검색
+	@Override
+	public List<HcDto> getSearchStartDate(String searchStartDate, String withh) {
+		System.out.println("HcDaoImp getSearchStartDate");																														
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("stDate", searchStartDate);
+		map.put("withh", withh);
+		System.out.println("term:"+searchStartDate+withh);
+		return sqlSession.selectList(namespace+"getSearchStartDate",map);
+	};	
+	
+	
+	
+	
 	
 	
 	//유저 정보 변경
@@ -289,26 +367,8 @@ public class HcDaoImp implements IHcDao {
 		return count > 0 ? true : false;
 	}	
 	
-	//모든 회원들의 '혼자' 하기 리스트 보기
-	@Override
-	public List<HcDto> getAllHcListAlone() {
-		List<HcDto>list=new ArrayList<HcDto>();
 
-		list=sqlSession.selectList(namespace+"getAllHcListAlone");
-		return list;
-	}
 	
-	//모든 회원들의 '함께' 하기 리스트 보기
-	@Override
-	public List<HcDto> getAllHcListWith() {
-		List<HcDto>list=new ArrayList<HcDto>();
-
-		list=sqlSession.selectList(namespace+"getAllHcListWith");
-		return list;
-	}   	
-	
-
-
 
 
 	//습관달력 한개 구하기
@@ -318,29 +378,7 @@ public class HcDaoImp implements IHcDao {
 	return sqlSession.selectList(namespace+"getHabitCalList",pKey);
 
    }   
-   
-
-   
-	//해당 아이디 인증 페이지들 모두 삭제
-	@Override
-	public boolean deleteHcInChk(String pKey,String id) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put( "pKey", pKey );
-		map.put( "id", id );
-		int count = 0;
-		count=sqlSession.update(namespace+"deleteHcInChk", map);
-		return count > 0 ? true : false;
-	}
-	
-
-	
-	
-   
-
-
-	
-	
-	
+ 	
 	//종료일이 지난 모든 리스트들 가저오기
 	@Override
 	public List<HcDto> getAllListEndY(String id) {
@@ -375,11 +413,6 @@ public class HcDaoImp implements IHcDao {
 		return list;      
 	}
 
-
-	
-	
-   
-
    
    @Override
    public boolean updateHcInChk(HcInChkDto HcInChkDto) {
@@ -406,12 +439,6 @@ public class HcDaoImp implements IHcDao {
    }
 
 
-
-
-
-
-
-
    
    @Override   
    public List<HcLoginDto> getAllUser() {
@@ -431,49 +458,6 @@ public class HcDaoImp implements IHcDao {
       return count > 0 ? true : false;
    }
 
-
-   
-
-   //아이디 검색
-   @Override
-   public List<HcDto> getSearchID(String searchId, String withh) {
-	      Map<String, String> map = new HashMap<String, String>();
-	         map.put("id", searchId);
-	         map.put("withh", withh);
-	         System.out.println("id:"+searchId+withh);
-
-	      return sqlSession.selectList(namespace+"getSearchID",map);
-   }
-   
-   //제목 검색
-   @Override
-   public List<HcDto> getSearchTitle(String searchTitle, String withh) {
-	      Map<String, String> map = new HashMap<String, String>();
-	         map.put("title", searchTitle);
-	         map.put("withh", withh);
-	         System.out.println("title:"+searchTitle+withh);
-	      return sqlSession.selectList(namespace+"getSearchTitle",map);
-   };
-   
-   //기간 검색
-   @Override
-   public List<HcDto> getSearchTerm(String searchTerm, String withh) {
-	      Map<String, String> map = new HashMap<String, String>();
-	         map.put("term", searchTerm);
-	         map.put("withh", withh);
-	         System.out.println("term:"+searchTerm+withh);
-	      return sqlSession.selectList(namespace+"getSearchTerm",map);
-   };
-
-   //시작일 검색
-   @Override
-   public List<HcDto> getSearchStartDate(String searchStartDate, String withh) {
-	      Map<String, String> map = new HashMap<String, String>();
-	         map.put("stDate", searchStartDate);
-	         map.put("withh", withh);
-	         System.out.println("term:"+searchStartDate+withh);
-	      return sqlSession.selectList(namespace+"getSearchStartDate",map);
-   };
    
 
 	@Override

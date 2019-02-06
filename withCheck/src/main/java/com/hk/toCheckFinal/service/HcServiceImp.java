@@ -192,8 +192,54 @@ public class HcServiceImp implements IHcService {
 		return hcDao.habitCalDelete(pKey,id);
 	}	
 	
+	//V해당 아이디 인증 페이지들 모두 삭제
+	@Override   
+	public boolean deleteHcInChk(String pKey,String id) {
+    	System.out.println("HcServiceImp deleteHcInChk");						      						    											
+		return hcDao.deleteHcInChk(pKey,id);
+	}	
+
+	//V모든 회원들의 '혼자' 하기 리스트 보기
+	@Override
+		public List<HcDto> getAllHcListAlone() {
+    	System.out.println("HcServiceImp getAllHcListAlone");						      						    													
+		return hcDao.getAllHcListAlone();
+	}	
+
+	//V모든 회원들의 '함께' 하기 리스트 보기
+	@Override
+		public List<HcDto> getAllHcListWith() {
+    	System.out.println("HcServiceImp getAllHcListWith");						      						    															
+		return hcDao.getAllHcListWith();
+	}
 	
-    
+	//V아이디 검색
+	public List<HcDto> getSearchID(String searchId, String withh){
+    	System.out.println("HcServiceImp getSearchID");						      						    													
+		return hcDao.getSearchID(searchId,withh);
+	}
+   
+	//V제목 검색
+	public List<HcDto> getSearchTitle(String searchTitle, String withh){
+    	System.out.println("HcServiceImp getSearchTitle");						      						    															
+		return hcDao.getSearchTitle(searchTitle,withh);
+	}
+   
+	//V기간 검색
+	public List<HcDto> getSearchTerm(String searchTerm, String withh){
+    	System.out.println("HcServiceImp getSearchTerm");						      						    															
+		return hcDao.getSearchTerm(searchTerm,withh);
+	}
+
+	//V시작일 검색
+	public List<HcDto> getSearchStartDate(String searchStartDate, String withh){
+    	System.out.println("HcServiceImp getSearchStartDate");						      						    																	
+		return hcDao.getSearchStartDate(searchStartDate,withh);
+	}
+	
+	
+	
+	
     //유저 정보 변경
     @Override
     public boolean updateUser(HcLoginDto dto) {
@@ -212,37 +258,8 @@ public class HcServiceImp implements IHcService {
 		return hcDao.deleList(id);
 	}	    
     
-	//모든 회원들의 '혼자' 하기 리스트 보기
-	@Override
-		public List<HcDto> getAllHcListAlone() {
-		return hcDao.getAllHcListAlone();
-	}
-	
-	//모든 회원들의 '함께' 하기 리스트 보기
-	@Override
-		public List<HcDto> getAllHcListWith() {
-		return hcDao.getAllHcListWith();
-	}
-	
-    
 
 
-
-
-
-
-	//해당 아이디 인증 페이지들 모두 삭제
-	@Override   
-	public boolean deleteHcInChk(String pKey,String id) {
-		return hcDao.deleteHcInChk(pKey,id);
-	}
-	
-
-	
-
-
-
-		
 	
 	//종료일이 지난 모든 리스트들 가저오기
 	@Override
@@ -336,25 +353,7 @@ public class HcServiceImp implements IHcService {
 
    
    
-   //아이디 검색
-   public List<HcDto> getSearchID(String searchId, String withh){
-	   return hcDao.getSearchID(searchId,withh);
-   }
-   
-   //제목 검색
-   public List<HcDto> getSearchTitle(String searchTitle, String withh){
-	   return hcDao.getSearchTitle(searchTitle,withh);
-   }
-   
-   //기간 검색
-   public List<HcDto> getSearchTerm(String searchTerm, String withh){
-	   return hcDao.getSearchTerm(searchTerm,withh);
-   }
 
-   //시작일 검색
-   public List<HcDto> getSearchStartDate(String searchStartDate, String withh){
-	   return hcDao.getSearchStartDate(searchStartDate,withh);
-   }
    
 	//랭킹
 	public List<HcDto> boardlistWithRanking(){

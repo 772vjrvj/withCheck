@@ -621,17 +621,114 @@ public class HomeController implements ServletContextAware {
 
 	}   		
 	
+
+	//V함께 하기 상세보기 삭제
+	@RequestMapping(value = "/habitCalDeleteWith.do", method = RequestMethod.GET)
+	public String habitCalDeleteWith(String pKey, String id,String which, Locale locale, Model model) {
+		logger.info("habitCalDeleteWith {}.", locale);
+		System.out.println("habitCalDeleteWith:pKey"+pKey+"habitCalDeleteWith:id"+id);
+		boolean isS  = hcService.habitCalDelete(pKey,id);
+		System.out.println("habitCalDeleteWith:isS"+isS);
+		
+		HcLoginDto HcLoginDto=hcService.getUser(id);
+		//인증페이지 다 삭제
+		boolean isS1  = hcService.deleteHcInChk(pKey,id);   
+		System.out.println("habitCalDeleteWith:isS1"+isS1);
+			if(isS==true&&isS1==true){
+				
+				if(which.equals("main")) {
+					return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();		
+				}else if(which.equals("boardListWith")) {
+					return "redirect:boardListWith.do";
+				}else if(which.equals("completeList")) {
+					return "redirect:habitCalCompleteList.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();				
+				}else {
+					model.addAttribute("msg","이동에 실패했습니다.");
+					return "error";    
+				}
+				
+			}else{
+				model.addAttribute("msg","삭제에 실패 했습니다.");
+				return "error";            
+			}
+	}     
 	
-	//혼자 함께 선택selectform
+	
+	//V혼자 함께 선택selectform
 	@RequestMapping(value = "/selectform.do", method = RequestMethod.GET)
 	public String selectform(Model model,Locale locale,SessionStatus session) {
 	   logger.info("selectform{}", locale);
-	   System.out.println();
 	   return "selectform"; 
 	}     	
+		
 	
-	
+	//V모든 회원들의 '혼자' 하기 리스트 보기
+	@RequestMapping(value = "/boardListAlone.do", method = RequestMethod.GET)
+	public ModelAndView boardlist(Locale locale, Model model) {
+		logger.info("혼자하기 목록 {}.", locale);
+		ModelAndView view = new ModelAndView();
+       
+      	 List<HcDto> list1=hcService.getAllHcListAlone(); 
+      	 for (int i = 0; i < list1.size(); i++) {
+      		System.out.println(list1.get(i));
+      	 }
+      	 
+      	 view.addObject("list1",list1);
+      	 view.setViewName("boardListAlone");
 
+       return view;
+    }   	
+	
+	//V모든 회원들의 '함께' 하기 리스트 보기
+    @RequestMapping(value = "/boardListWith.do", method = RequestMethod.GET)
+    public ModelAndView boardlistWith(Locale locale, Model model) {
+       logger.info("함께하기 목록 {}.", locale);
+       ModelAndView view = new ModelAndView();
+       
+      	 List<HcDto> list1=hcService.getAllHcListWith();
+      	 view.addObject("list1",list1);
+      	 view.setViewName("boardListWith");
+
+       return view;
+    } 	
+    
+	//V검색하기
+	@RequestMapping(value = "/search1.do", method = RequestMethod.GET)
+	public ModelAndView search1(String select1,String input2, String withh, Locale locale) {
+		logger.info("search1 {}.", locale);
+		ModelAndView view = new ModelAndView();
+		System.out.println("select1:"+select1);
+		System.out.println("input2:"+input2);
+
+		if(select1.equals("ID")) {
+	    	List<HcDto> list1=hcService.getSearchID(input2,withh);
+			view.addObject("list1",list1);
+
+		}else if(select1.equals("Title")) {
+			List<HcDto> list1=hcService.getSearchTitle(input2,withh);
+			System.out.println("list1"+list1);
+			view.addObject("list1",list1);			
+
+		}else if(select1.equals("Term")) {
+			List<HcDto> list1=hcService.getSearchTerm(input2,withh);
+			view.addObject("list1",list1);
+
+		}else if(select1.equals("StartDate")) {
+			List<HcDto> list1=hcService.getSearchStartDate(input2,withh);
+			view.addObject("list1",list1);
+		}
+		
+		
+		if (withh.equals("Y")) {
+			view.setViewName("boardListWith");						
+		} else {
+			view.setViewName("boardListAlone");
+		}
+		
+		return view;
+	}	
+	
+	
 	//현재 진행중인 리스트 평균 각각 퍼센트 구하기
 	@RequestMapping(value = "/totalPer.do", method = RequestMethod.GET)
 	public ModelAndView totalPer(String id, Locale locale, Model model) {
@@ -741,35 +838,9 @@ public class HomeController implements ServletContextAware {
          
 
 	
-	//모든 회원들의 '혼자' 하기 리스트 보기
-	@RequestMapping(value = "/boardListAlone.do", method = RequestMethod.GET)
-	public ModelAndView boardlist(Locale locale, Model model) {
-		logger.info("혼자하기 목록 {}.", locale);
-		ModelAndView view = new ModelAndView();
-       
-      	 List<HcDto> list1=hcService.getAllHcListAlone(); 
-      	 for (int i = 0; i < list1.size(); i++) {
-      		System.out.println(list1.get(i));
-      	 }
-      	 
-      	 view.addObject("list1",list1);
-      	 view.setViewName("boardListAlone");
 
-       return view;
-    }   	
 	
-	//모든 회원들의 '함께' 하기 리스트 보기
-    @RequestMapping(value = "/boardListWith.do", method = RequestMethod.GET)
-    public ModelAndView boardlistWith(Locale locale, Model model) {
-       logger.info("함께하기 목록 {}.", locale);
-       ModelAndView view = new ModelAndView();
-       
-      	 List<HcDto> list=hcService.getAllHcListWith();
-      	 view.addObject("list",list);
-      	 view.setViewName("boardListWith");
 
-       return view;
-    } 	
 
 
     //모든 회원들의 '혼자' 하기 리스트 상세 보기만 하기 다른 사용자용
@@ -999,37 +1070,7 @@ public class HomeController implements ServletContextAware {
     
     
 
-	//달력 삭제 및 취소
-	@RequestMapping(value = "/habitCalDeleteWith.do", method = RequestMethod.GET)
-	public String habitCalDeleteWith(String pKey, String id,String which, Locale locale, Model model) {
-		logger.info("habitCalDeleteWith {}.", locale);
-		System.out.println("habitCalDeleteWith:pKey"+pKey+"habitCalDeleteWith:id"+id);
-		boolean isS  = hcService.habitCalDelete(pKey,id);
-		System.out.println("habitCalDeleteWith:isS"+isS);
-		
-		HcLoginDto HcLoginDto=hcService.getUser(id);
-		//인증페이지 다 삭제
-		boolean isS1  = hcService.deleteHcInChk(pKey,id);   
-		System.out.println("habitCalDeleteWith:isS1"+isS1);
-			if(isS==true&&isS1==true){
-				
-				if(which.equals("main")) {
-					return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();		
-				}else if(which.equals("boardListWith")) {
-					return "redirect:boardListWith.do";
-				}else if(which.equals("completeList")) {
-					return "redirect:habitCalCompleteList.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();				
-				}else {
-					model.addAttribute("msg","이동에 실패했습니다.");
-					return "error";    
-				}
-				
-			}else{
-				model.addAttribute("msg","삭제에 실패 했습니다.");
-				return "error";            
-			}
-
-	}         
+    
       
 	//달력 삭제 및 취소
 	@RequestMapping(value = "/habitCalDeleteWithAll.do", method = RequestMethod.GET)
@@ -1270,52 +1311,7 @@ public class HomeController implements ServletContextAware {
     
 
     
-		//검색하기
-		@RequestMapping(value = "/search1.do", method = RequestMethod.GET)
-		public ModelAndView search1(String select1,String input2, String withh, Locale locale) {
-			logger.info("search1 {}.", locale);
-			ModelAndView view = new ModelAndView();
-			System.out.println("select1:"+select1);
-			System.out.println("input2:"+input2);
-
-			
-			if(select1.equals("ID")) {
-		    	List<HcDto> list1=hcService.getSearchID(input2,withh);
-				view.addObject("list1",list1);
-				if (withh=="Y") {
-					view.setViewName("boardListWith");						
-				} else {
-					view.setViewName("boardListAlone");
-				}
-
-			}else if(select1.equals("Title")) {
-				List<HcDto> list1=hcService.getSearchTitle(input2,withh);
-				view.addObject("list1",list1);
-				if (withh=="Y") {
-					view.setViewName("boardListWith");						
-				} else {
-					view.setViewName("boardListAlone");
-				}
-			}else if(select1.equals("Term")) {
-				List<HcDto> list1=hcService.getSearchTerm(input2,withh);
-				view.addObject("list1",list1);
-				if (withh=="Y") {
-					view.setViewName("boardListWith");						
-				} else {
-					view.setViewName("boardListAlone");
-				}
-			}else if(select1.equals("Start")) {
-				List<HcDto> list1=hcService.getSearchStartDate(input2,withh);
-				view.addObject("list1",list1);
-				if (withh=="Y") {
-					view.setViewName("boardListWith");						
-				} else {
-					view.setViewName("boardListAlone");
-				}
-			}
-			
-			return view;
-		}
+		
 		
 		//랭킹보기
 	    @RequestMapping(value = "/boardlistWithRanking.do", method = RequestMethod.GET)

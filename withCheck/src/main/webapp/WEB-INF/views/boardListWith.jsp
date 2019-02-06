@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>With</title>
 <jsp:include page="head.jsp"/>
 <jsp:include page="style.jsp"/>
@@ -34,15 +34,14 @@ $(function(){
     $("select[name=select1]").change(function(){
     	$("input[name=input2]").val("");
 
-		if($("select[name=select1]").val()=='Start'){
+		if($("select[name=select1]").val()=='StartDate'){
 			
 		    $('#datepicker').datepicker({
 		        //달력 나오게하는 방법 설정  -> button, text, both
-
 		        
 // 		        showOn:"both",
 		        //버튼에 나올 텍스트 설정
-		        buttonText:"Cal",
+// 		        buttonText:"Cal",
 		        //년도랑 월 설정하는 select 박스 표시 여부 설정
 		        changeYear:true,
 		        changeMonth:true,
@@ -258,114 +257,76 @@ figure div:nth-child(3) {
 
 </head>
 <body>
-<jsp:useBean id="Cal" class="com.hk.toCheckFinal.utils.cal"/>
-	 <jsp:useBean id="Util" class="com.hk.toCheckFinal.utils.Util"/>
+	<jsp:useBean id="Cal" class="com.hk.toCheckFinal.utils.cal"/>
+	<jsp:useBean id="Util" class="com.hk.toCheckFinal.utils.Util"/>
 	 
 	<div id="container">
 		<div style="text-align: center;">
 			<select id="select1" name="select1">
-              <option value="ID" >ID</option>
-              <option value="Title">Title</option>
-              <option value="Term" >Term</option>
-              <option value="Start">StartDate</option>
-        	</select>	
+				<option value="ID" >ID</option>
+				<option value="Title">Title</option>
+				<option value="Term" >Term</option>
+				<option value="StartDate">StartDate</option>
+        	</select>
+        		
         	<input type="text" id="datepicker" name="input2" style="width: 200px;" autocomplete="off" />
         	<input type="button" value="search" class="btn btn-default btn-xs" onclick="search1()"/>
-        	</div>
-        	<br/><br/><br/>
-		<table style=" align-content: center;">
-		<col width="180px">
-		<col width="180px">
-		<col width="180px">
-		<col width="180px">
-
-        	<br/>		
-
+		</div>
+        
+        <br/><br/><br/>
 		
+		<table style=" align-content: center;">
 			<c:choose>
-			<c:when test="${fn:length(list) eq 0 }">
-       			<div id="ifnull">There are no completed listings.</div>
-			</c:when>
-			<c:otherwise>
-				<c:forEach var="dto" items="${list}" varStatus="status">
-					<c:set var="per" value="0.0"/>
-					
-					<c:choose>
-					<c:when test="${dto.chkCount eq 0}">
+				<c:when test="${fn:length(list1) eq 0 }">
+					<div id="ifnull">검색 결과 없음.</div>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="dto" items="${list1}" varStatus="status">
+						<c:set var="per" value="0.0"/>
 						
-					</c:when>
-					<c:otherwise>
-						<c:set var="per" value="${(dto.chkCount/dto.term)*100}"/>
+						<c:choose>
+							<c:when test="${dto.chkCount eq 0}">
+								
+							</c:when>
+							<c:otherwise>
+								<c:set var="per" value="${(dto.chkCount/dto.term)*100}"/>
+							</c:otherwise>
+						</c:choose>
+							
+						<c:choose>
+							<c:when test="${(status.count)%4 eq 1}">
+								<tr>
+							</c:when>
+						</c:choose>
 						
-					</c:otherwise>
-					</c:choose>	
-					<c:choose>
-					<c:when test="${(status.count)%4 eq 1}">
-						<tr><td>
+						<td>
 							<div class="progress-fixed">
-							<img alt="이미지" src="${dto.photo}" >
-							<div>${dto.id}</div>
-							<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(<span class="redcol">${dto.chkCount}</span>/${dto.term})</div>
-					  		<figure>
-					    		<div class="progress-fixed__bar${status.count}"></div>
-					    		<div class="progress-fixed__percent${status.count}"></div>
-						    		<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
-					  		</figure>
-							</div>
-							<input class="bar" type="hidden"  onclick="BG.init(${per},${status.count})"/>
-							<br/>
-							<br/>
-							</td>
-					</c:when>
-					<c:when test="${(status.count)%4 eq 2||(status.count)%4 eq 3}">
-							<td>
-							<div class="progress-fixed">
-							<img alt="이미지" src="${dto.photo}" >
-							<div>${dto.id}</div>
-							<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(<span class="redcol">${dto.chkCount}</span>/${dto.term})</div>
-					  		<figure>
-					    		<div class="progress-fixed__bar${status.count}"></div>
-					    		<div class="progress-fixed__percent${status.count}"></div>
-						    		<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
-					  		</figure>
-							</div>
-							<input class="bar" type="hidden"  onclick="BG.init(${per},${status.count})"/>	
-							<br/>
-							<br/>				
-							</td>						
-					</c:when>
-					<c:when test="${(status.count)%4 eq 0}">
-							<td>
-							<div class="progress-fixed">
-							<img alt="이미지" src="${dto.photo}" >
-							<div>${dto.id}</div>
-							<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(<span class="redcol">${dto.chkCount}</span>/${dto.term})</div>
+								<img alt="이미지" src="${dto.photo}" >
+										
+								<div>${dto.id}</div>
+								
+								<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(<span class="redcol">${dto.chkCount}</span>/${dto.term})</div>
 						  		<figure>
 						    		<div class="progress-fixed__bar${status.count}"></div>
 						    		<div class="progress-fixed__percent${status.count}"></div>
-						    		<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
+					    			<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
 						  		</figure>
 							</div>
-							<input class="bar" type="hidden"  onclick="BG.init(${per},${status.count})"/>	
-							<br/>
-							<br/>
-							</td><tr>						
-					</c:when>
-					</c:choose>	
-				</c:forEach>						
-			</c:otherwise>
+							
+							<input class="bar" type="hidden"  onclick="BG.init(${per},${status.count})"/>
+							
+							<br/><br/>
+						</td>
+						
+						<c:choose>
+							<c:when test="${((status.count)%4 eq 0) or (status.count eq fn:length(list1))}">
+								<tr>
+							</c:when>
+						</c:choose>		
+					</c:forEach>						
+				</c:otherwise>
 			</c:choose>
 
-			<c:forEach var = "m" begin = "1" end = "${(4-(fn:length(list1))%4)%4}">
-				<c:choose>
-				<c:when test="${m eq  (4-(fn:length(list1))%4)%4}">
-					<td>&nbsp;</td></tr>
-				</c:when>
-				<c:otherwise>
-					<td>&nbsp;</td>
-				</c:otherwise>				
-				</c:choose>
-			</c:forEach>	
 		</table>
 	</div>
 </body>

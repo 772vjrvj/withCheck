@@ -171,7 +171,6 @@ public class Util {
 	public static Map<String, Integer> TodayYYMMDD2 (String thisDate){
 	Map<String, Integer> map = new HashMap<String, Integer>();
 	
-
 		String ToYear=thisDate.substring(0,4);
 		int ToYear1=Integer.parseInt(ToYear);       
 		String ToMonth=thisDate.substring(4,6);

@@ -8,8 +8,7 @@ import com.hk.toCheckFinal.dtos.HcInChkDto;
 import com.hk.toCheckFinal.dtos.HcLoginDto;
 
 public interface IHcDao {
-	
-   
+	 
 	//V아이디 체크
 	public HcLoginDto idChk(String id);
 	
@@ -85,8 +84,29 @@ public interface IHcDao {
 	//V해당 아이디 습관달력 삭제
 	public boolean habitCalDelete(String pKey,String id);	
 
+	//V해당 아이디 인증 페이지들 모두 삭제
+	public boolean deleteHcInChk(String pKey,String id);   
 
+	//V모든 회원들의 '혼자' 하기 리스트 보기
+	public List<HcDto> getAllHcListAlone();
+	
+	//V모든 회원들의 '함께' 하기 리스트 보기
+	public List<HcDto> getAllHcListWith();
+	
+	//V아이디 검색
+	public List<HcDto> getSearchID(String searchId, String withh);
+   
+	//V제목 검색
+	public List<HcDto> getSearchTitle(String searchTitle, String withh);
+   
+	//V기간 검색
+	public List<HcDto> getSearchTerm(String searchTerm, String withh);
 
+	//V시작일 검색
+	public List<HcDto> getSearchStartDate(String searchStartDate, String withh);
+   	
+	
+	
 	//유저 정보 변경
 	public boolean updateUser(HcLoginDto dto);
 
@@ -96,22 +116,10 @@ public interface IHcDao {
 	//탈퇴한 아이디 리스트 지우기
 	public boolean deleList(String id);
 
-	//모든 회원들의 '혼자' 하기 리스트 보기
-	public List<HcDto> getAllHcListAlone();
-	
-	//모든 회원들의 '함께' 하기 리스트 보기
-	public List<HcDto> getAllHcListWith();
-	
+
 
 	//pKey가 같은 습관달력들 구하기
 	public List<HcDto> getHabitCalList(String pKey);
-
-
-	//해당 아이디 인증 페이지들 모두 삭제
-	public boolean deleteHcInChk(String pKey,String id);   
-
-
-
 
 	//종료일이 지난 모든 리스트들 가저오기
 	public List<HcDto> getAllListEndY(String id);
@@ -125,36 +133,17 @@ public interface IHcDao {
 	//해당일 인증해야 하는 것들 다 가지고 오기
 	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto);
 
-
-	
 	
 	
    public List<HcDto> searchContentId(String searchContent);
    public List<HcDto> searchContentTitle(String searchContent);
    
    public boolean updateHcInChk(HcInChkDto HcInChkDto);   
-   
-
-
 
    public List<HcLoginDto> getAllUser();
    public boolean updateRoleUser(String id, String role,String enabled);
    
-     
-
-
-   //아이디 검색
-   public List<HcDto> getSearchID(String searchId, String withh);
-   
-   //제목 검색
-   public List<HcDto> getSearchTitle(String searchTitle, String withh);
-   
-   //기간 검색
-   public List<HcDto> getSearchTerm(String searchTerm, String withh);
-
-   //시작일 검색
-   public List<HcDto> getSearchStartDate(String searchStartDate, String withh);
-   
+ 
 	//랭킹
 	public List<HcDto> boardlistWithRanking();
    

@@ -154,10 +154,53 @@
 		WHERE PKEY=#{pKey} AND ID=#{id}
 		</delete>
 
-
+		<!--	V해당 아이디 인증 페이지들 모두 삭제 -->
+		<delete id="deleteHcInChk" parameterType="Map" >
+		DELETE 
+		FROM HCINCHKBOARD WHERE PKEY=#{pKey} AND ID=#{id}
+		</delete>
       	
+		<!--	V모든 회원들의 '혼자' 하기 리스트 보기  -->
+		<select id="getAllHcListAlone" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCBOARD WHERE WITHH ='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
 
-		<!-- 		탈퇴하기 -->
+		<!--	V모든 회원들의 '함께' 하기 리스트 보기  -->
+		<select id="getAllHcListWith" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCBOARD WHERE WITHH ='Y' AND ENDLIST='N' AND NOT HOST='N'  ORDER BY REGDATE DESC
+		</select>
+
+		<!--	V아이디 검색 -->
+		<select id="getSearchID" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCBOARD WHERE ID LIKE '%'||#{id}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
+	
+		<!--	V제목 검색 -->
+		<select id="getSearchTitle" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCBOARD WHERE TITLE LIKE '%'||#{title}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
+
+		<!--	V기간 검색 -->
+		<select id="getSearchTerm" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCBOARD WHERE TERM LIKE '%'||#{term}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
+      
+		<!--	V시작일 검색 -->
+		<select id="getSearchStartDate" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCBOARD WHERE STDATE LIKE '%'||#{stDate}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select>  
+
+
+
+
+
+		<!--	탈퇴하기 -->
 		<update id="deleUser" parameterType="String">
 		UPDATE HCMEMBER SET ENABLED='N'
 		WHERE Id=#{value}
@@ -169,17 +212,9 @@
 		WHERE Id=#{value}
 		</update>
       
-		<!--       	모든 회원들의 '혼자' 하기 리스트 보기  -->
-		<select id="getAllHcListAlone" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCBOARD WHERE WITHH ='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-		</select> 
+
 		
-		<!--       	모든 회원들의 '함께' 하기 리스트 보기  -->
-		<select id="getAllHcListWith" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCBOARD WHERE WITHH ='Y' AND ENDLIST='N' AND NOT HOST='N'  ORDER BY REGDATE DESC
-		</select>
+
       	
     
       
@@ -189,20 +224,6 @@
 		FROM HCBOARD WHERE PKEY=#{pKey}
    		</select>
       
-		<!-- 		해당 아이디 인증 페이지들 모두 삭제 -->
-		<delete id="deleteHcInChk" parameterType="Map" >
-		DELETE 
-		FROM HCINCHKBOARD WHERE PKEY=#{pKey} AND ID=#{id}
-		</delete>
-
-
-
-
-		
-
-
-
- 
       
 		<!--       	종료일이 지난 모든 리스트들 가저오기 -->
 		<select id="getAllListEndY" parameterType="String" resultType="HcDto">
@@ -249,59 +270,18 @@
 		<update id="updateRoleUser" parameterType="Map">
 		UPDATE HCMEMBER SET ROLE=#{role}, ENABLED=#{enabled} WHERE ID=#{id}      
 		</update>
-
-      
-      
-      
-
-      
-
       
       <!--          유저 정보 변경 -->
       <update id="updateUser" parameterType="HcLoginDto">
       UPDATE HCMEMBER SET ADDRESS=#{address}, PHONE=#{phone}, EMAIL=#{email}, QUESTION=#{question}, ANSWER=#{answer}
       WHERE Id=#{id}
       </update>  
-      
-      
-
-
-
-
-
-
-	
-      <!--       아이디 검색 -->
-      <select id="getSearchID" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCBOARD WHERE ID LIKE '%'||#{id}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-      </select> 
-	
-      <!--       제목 검색 -->
-      <select id="getSearchTitle" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCBOARD WHERE TITLE LIKE '%'||#{title}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-      </select> 
-
-      <!--       기간 검색 -->
-      <select id="getSearchTerm" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCBOARD WHERE TERM LIKE '%'||#{term}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-      </select> 
-      
-      <!--       시작일 검색 -->
-      <select id="getSearchStartDate" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCBOARD WHERE STDATE LIKE '%'||#{stDate}||'%' AND WITHH =#{withh} AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-      </select>       
-
+  
 
 		<!--       	랭킹  -->
 		<select id="boardlistWithRanking" resultType="HcDto">
 		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
 		FROM HCBOARD WHERE WITHH ='Y' AND ENDLIST='Y' ORDER BY CHKCOUNT DESC
 		</select>
-
-
 
     </mapper>
