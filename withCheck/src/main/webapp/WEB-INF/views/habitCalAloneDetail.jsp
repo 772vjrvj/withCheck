@@ -259,6 +259,7 @@
 			</table>
 			
 			<c:set var="st" value="0"/><c:set var="ed" value="0"/>
+			
 			<c:forEach var = "i" begin = "${map.stYear}" end = "${map.edYear}">   
 				<table style="border-collapse: collapse; border: white">
 					<tr><td style="color: white">&nbsp;</td></tr>
@@ -339,7 +340,7 @@
 									</tr>	
 								</c:when>
 							</c:choose>
-					</c:forEach>
+						</c:forEach>
 					</table>
 					
 					<br>         

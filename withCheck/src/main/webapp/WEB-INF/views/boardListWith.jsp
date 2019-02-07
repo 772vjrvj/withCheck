@@ -212,7 +212,7 @@ figure div:nth-child(1) {
 
 /* 파란 게이지 막대 */
 .progress-fixed div[class*=progress-fixed__bar] {
-	background: black;
+	background: #000000;
 /* 	바뀜 */
 	
 }

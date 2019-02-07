@@ -727,8 +727,78 @@ public class HomeController implements ServletContextAware {
 		
 		return view;
 	}	
+
 	
+    //V모든 회원들의 '혼자' 하기 리스트 상세 보기만 하기 다른 사용자용
+	@RequestMapping(value = "/habitCalAloneDetailView.do", method = RequestMethod.GET)
+	public ModelAndView habitCalAloneDetailView(String id, String pKey, Locale locale) throws ParseException {
+		logger.info("habitCalAloneDetailView {}.", locale);
+		ModelAndView view = new ModelAndView();
+		
+		HcDto dto = hcService.getHabitCalListOne(pKey,id);
+        
+		Map<String, Integer> map =Util.DetailYYMMDD(dto);
+        
+		List<String> chkList=hcService.habitCalTakeChk(pKey);
+		
+        view.addObject("chkList",chkList);
+        view.addObject("dto",dto);   
+        view.addObject("map",map);
+        view.addObject("id",id); 
+        view.setViewName("habitCalAloneDetailView");
+        	 
+        return view;         
+        	 
+	}   
 	
+
+	//V함께하기 달력 보기만 하기
+	@RequestMapping(value = "/habitCalWithDetailView.do", method = RequestMethod.GET)
+	public ModelAndView habitCalWithDetailView(String id, String pKey, Locale locale) throws ParseException {
+		logger.info("habitCalWithDetailView {}.", locale);
+		ModelAndView view = new ModelAndView();
+		
+		HcDto dto = hcService.getHabitCalListOne(pKey,id);
+        
+		long diffdays=Util.doDiffOfDate(dto.getStDate());
+        
+		int stDate=Integer.parseInt(dto.getStDate());
+		int edDate=Integer.parseInt(dto.getEdDate());
+		
+		if(today1>=stDate&&today1<=edDate) {
+		//시작일 =< 오늘날짜  =< 종료일 && 함께하기 상태인 경우 	  
+				Map<String, Integer> map= Util.TodayYYMMDD();
+				//인증하기 해당 날짜에 해당 목록
+				List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, today1+""));
+				view.addObject("list",list);
+				view.addObject("diffdays",diffdays);
+				view.addObject("map",map);
+				view.addObject("dto",dto);
+				view.setViewName("photoInChkView");
+
+			return view;
+			
+		}else{
+
+			Map<String, Integer> map =Util.DetailYYMMDD(dto);
+			List<HcDto> list = hcService.getHabitCalList(pKey);
+			int intoPer=hcService.habitCalIntoPerCount(pKey);
+			List<String> chkList=hcService.habitCalTakeChk(pKey);
+			view.addObject("diffdays",-diffdays);
+	        view.addObject("dto",dto);   
+	        view.addObject("map",map);
+	        view.addObject("intoPer",intoPer);
+	        view.addObject("chkList",chkList);
+	        view.addObject("list",list);//참가자들
+            
+            view.setViewName("habitCalWithDetailView");
+            	 
+            return view;        
+		}        
+
+	}
+	
+
 	//현재 진행중인 리스트 평균 각각 퍼센트 구하기
 	@RequestMapping(value = "/totalPer.do", method = RequestMethod.GET)
 	public ModelAndView totalPer(String id, Locale locale, Model model) {
@@ -843,75 +913,10 @@ public class HomeController implements ServletContextAware {
 
 
 
-    //모든 회원들의 '혼자' 하기 리스트 상세 보기만 하기 다른 사용자용
-	@RequestMapping(value = "/habitCalAloneDetailView.do", method = RequestMethod.GET)
-	public ModelAndView habitCalAloneDetailView(String id, String pKey, Locale locale) throws ParseException {
-		logger.info("habitCalAloneDetailView {}.", locale);
-		ModelAndView view = new ModelAndView();
-		
-		HcDto dto = hcService.getHabitCalListOne(pKey,id);
-        
-		Map<String, Integer> map =Util.DetailYYMMDD(dto);
-        
-		List<String> chkList=hcService.habitCalTakeChk(pKey);
-		
-        long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
 
-        view.addObject("diffdays",diffdays);     
-        view.addObject("chkList",chkList);
-        view.addObject("dto",dto);   
-        view.addObject("map",map);
-        view.addObject("id",id); 
-        view.setViewName("habitCalAloneDetailView");
-        	 
-        return view;         
-        	 
-	}   
     
 
-	//함께하기 달력 보기만 하기
-	@RequestMapping(value = "/habitCalWithDetailView.do", method = RequestMethod.GET)
-	public ModelAndView habitCalWithDetailView(String id, String pKey, Locale locale) throws ParseException {
-		logger.info("habitCalWithDetailView {}.", locale);
-		ModelAndView view = new ModelAndView();
-		
-		HcDto dto = hcService.getHabitCalListOne(pKey,id);
-        
-		long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
-		//시작일 =< 오늘날짜  =< 종료일 && 함께하기 상태인 경우
-        
-		if(diffdays>=1 && diffdays<=Integer.parseInt(dto.getTerm())) {
-        	  
-			Map<String, Integer> map= Util.TodayYYMMDD();
-			//인증하기 해당 날짜에 해당 목록
-			List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, today1+""));
-			view.addObject("list",list);
-			view.addObject("diffdays",diffdays);
-			view.addObject("map",map);
-			view.addObject("dto",dto);
-			view.setViewName("photoInChkView");
-        	 
-			return view;
-			
-		}else{
 
-    		Map<String, Integer> map =Util.DetailYYMMDD(dto);
-    		List<HcDto> list = hcService.getHabitCalList(pKey);
-    		int intoPer=hcService.habitCalIntoPerCount(pKey);
-    		List<String> chkList=hcService.habitCalTakeChk(pKey);
-    		view.addObject("diffdays",-(diffdays-1));
-            view.addObject("dto",dto);   
-            view.addObject("map",map);
-            view.addObject("intoPer",intoPer);
-            view.addObject("chkList",chkList);
-            view.addObject("list",list);//참가자들
-            
-            view.setViewName("habitCalWithDetailView");
-            	 
-            return view;        
-		}        
-
-	}
          
 
 	
