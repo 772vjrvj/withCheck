@@ -89,47 +89,50 @@ h5 {
 </head>
 <body>
 	<div id="container">
-	<div id="tit">
-	<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">${diffdays}</span>/${dto.term})
-	</div>
-		<form action="photoInChkInsert.do" method="post"
-			enctype="multipart/form-data">
-			<br /> <input type="hidden" name="id" value="${dto.id}" /> 
-					<input type="hidden" name="pKey" value="${dto.pKey}" /> 
-					<input type="hidden" name="title" value="${dto.title}" /> 
+		<div id="tit">
+			<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">${diffdays}</span>/${dto.term})
+		</div>
+		<br /> 
+		<form action="photoInChkInsert.do" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="id" value="${dto.id}" /> 
+			<input type="hidden" name="pKey" value="${dto.pKey}" /> 
+			<input type="hidden" name="title" value="${dto.title}" /> 
+			
 			<table>
 				<col width="100px">
 				<col width="400px">
 				<col width="100px">
+				
 				<tr>
 					<td colspan="3">
-								<label  for="imgInp" style="">File Upload</label><input style="text-align: center;" type="file" name="file"
-								
-									id="imgInp" value="사진 찾기" />
-								<img id="blah" src="resources/${HcInChkDto.inChkPhoto2}" alt="your image"  width="100%" height="400px" /> 
-
+						<label  for="imgInp" style="">사진 인증 하기</label><input style="text-align: center;" type="file" name="file"id="imgInp" value="사진 찾기" />
+												
+						<c:choose>
+							<c:when test="${HcInChkDto.inChkPhoto2 eq null or HcInChkDto.inChkPhoto2 eq '' }">
+								<img id="blah" src="img/white.png" alt="your image" width="100%" height="400px" />
+							</c:when>
+					
+							<c:otherwise>
+								<img id="blah" src="resources/${HcInChkDto.inChkPhoto2}" alt="your image" width="100%" height="400px" />
+							</c:otherwise>
+						</c:choose>
+					</td> 
 				</tr>
 				
 				<tr>
-					<th>ID</th>
+					<th>아아디</th>
 					<td colspan="3">${HcInChkDto.id}</td>
 				</tr>
 				<tr>
-					<th>Title</th>
-					<td colspan="3"><input class="contents" type="text"
-						name="inChkTitle" style="width: 490px;" required="required"
-						autocomplete="off"  /></td>
-
+					<th>제목</th>
+					<td colspan="3"><input class="contents" type="text"name="inChkTitle" style="width: 490px;" required="required" autocomplete="off"  /></td>
 				</tr>
 				<tr>
-					<th>Content</th>
-					<td colspan="3"><textarea class="contents"
-							style="width: 490px;" rows="5" cols="55" name="inChkContent"
-							required="required" autocomplete="off"></textarea></td>
+					<th>내용</th>
+					<td colspan="3"><textarea class="contents"style="width: 490px;" rows="5" cols="55" name="inChkContent"required="required" autocomplete="off"></textarea></td>
 				</tr>
 				<tr>
-					<td colspan="3" style="text-align: right;"><input
-						class="btn btn-default btn-xs" type="submit" value="Complete" /></td>
+					<td colspan="3" style="text-align: right;"><input class="btn btn-default btn-xs" type="submit" value="확인" /></td>
 				</tr>
 			</table>
 		</form>

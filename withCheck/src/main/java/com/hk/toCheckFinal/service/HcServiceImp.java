@@ -142,7 +142,12 @@ public class HcServiceImp implements IHcService {
     	System.out.println("HcServiceImp getHabitCalListOne");						      		
 		return hcDao.getHabitCalListOne(pKey,id);
 	}	
-
+	
+	//VpKey가 같은 습관달력들 구하기
+	public List<HcDto> getHabitCalList(String pKey){
+		return hcDao.getHabitCalList(pKey);
+	}
+	
 	//V체크 값들 가저오기
 	@Override
 	public List<String> habitCalTakeChk(String pKey){
@@ -237,7 +242,33 @@ public class HcServiceImp implements IHcService {
 		return hcDao.getSearchStartDate(searchStartDate,withh);
 	}
 	
+	//V해당일 인증해야 하는 것들 다 가지고 오기	
+	@Override
+	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto){
+    	System.out.println("HcServiceImp getHcInChk");						      						    																			      
+		return hcDao.getHcInChk(HcInChkDto);
+	}	
+
+	//V인증값 가저오기
+	@Override
+	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto){
+    	System.out.println("HcServiceImp getHcUserInChk");						      						    																			      	      
+		return hcDao.getHcUserInChk(HcInChkDto);
+	}   	
 	
+	//V인증사진 올리기
+	@Override
+	public boolean updateHcInChk(HcInChkDto HcInChkDto) {
+    	System.out.println("HcServiceImp updateHcInChk");						      						    																			      	      	      
+		return hcDao.updateHcInChk(HcInChkDto);
+	}	
+	
+	//V인증삭제하기
+	@Override
+	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto){
+		System.out.println("HcServiceImp deleteHcUserInChk");
+		return hcDao.deleteHcUserInChk(HcInChkDto);
+	}      	
 	
 	
     //유저 정보 변경
@@ -267,42 +298,19 @@ public class HcServiceImp implements IHcService {
 		return hcDao.getAllListEndY(id);
 	}	
 	
-	//인증값 가저오기
-	@Override
-	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto){
-	      
-		return hcDao.getHcUserInChk(HcInChkDto);
-	}   	
 	
-	//pKey가 같은 습관달력들 구하기
-	public List<HcDto> getHabitCalList(String pKey){
-		return hcDao.getHabitCalList(pKey);
-	}
 	
-	//인증삭제하기
-	@Override
-	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto){
-	      
-		return hcDao.deleteHcUserInChk(HcInChkDto);
-	}      	
+	
+
    
-	//해당일 인증해야 하는 것들 다 가지고 오기	
-	@Override
-	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto){
-		      
-		return hcDao.getHcInChk(HcInChkDto);
-	}
+
 
 
 	
 
 	
 	
-	@Override
-	public boolean updateHcInChk(HcInChkDto HcInChkDto) {
-	      
-		return hcDao.updateHcInChk(HcInChkDto);
-	}
+
 	
 	
 	

@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Certification</title>
 <jsp:include page="head.jsp"/>
 <jsp:include page="style.jsp"/>
@@ -91,42 +91,53 @@ h5 {
 </head>
 <body>
 	<div id="container">
-	<div id="tit">
-	<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">${diffdays}</span>/${dto.term})
-	</div>
-	<form action="photoInChkUpdate.do" method="post" enctype="multipart/form-data">
-	   <br/>
-	   <input type="hidden" name="id" value="${dto.id}"/>
-	   <input type="hidden" name="pKey" value="${dto.pKey}"/>
+		<div id="tit">
+			<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">${diffdays}</span>/${dto.term})
+		</div>
+		<br/>
+		<form action="photoInChkUpdate.do" method="post" enctype="multipart/form-data">
+	   
+		<input type="hidden" name="id" value="${dto.id}"/>
+		<input type="hidden" name="pKey" value="${dto.pKey}"/>
 		<input type="hidden" name="inChkPhoto2" value="${HcInChkDto.inChkPhoto2}"/>
 	   
-	   <table>
-	      <col width="100px">
-	      <col width="400px">
-	      <col width="100px">
-	      <tr>
-	         <td colspan="3">
-			    <label  for="imgInp" style="">File Upload</label><input style="text-align: center; display: none;"type="file" name="file" id="imgInp" title=" "  value="사진 찾기"/>
-	         <img id="blah" src="resources/${HcInChkDto.inChkPhoto2}" alt="your image" width="100%" height="400px"/>         
-	      </tr> 
-	      <tr >
-	         <th>ID</th>
-	         <td colspan="3">${HcInChkDto.id}</td>
-	      </tr>
-	      <tr >
-	         <th>Title</th>
-	         <td colspan="3"><input class="contents" type="text" name="inChkTitle" style="width: 490px;" required="required" autocomplete="off" value="${HcInChkDto.inChkTitle}"/></td>
-	
-	      </tr>
-	      <tr>
-	         <th>Content</th>
-	         <td colspan="3"><textarea class="contents" style="width: 490px;"  rows="5" cols="55" name="inChkContent" required="required" autocomplete="off" >${HcInChkDto.inChkContent}</textarea></td>
-	      </tr>
-	      <tr>
-	         <td colspan="3" style="text-align: right;">
-	            <input class="btn btn-default btn-xs" type="button"  value="Delete" onclick="location.href='photoInChkDelete.do?pKey=${HcInChkDto.pKey}&id=${HcInChkDto.id}'"/><input class="btn btn-default btn-xs" type="submit"  value="Complete"/>
-	         </td>
-	      </tr>
+		<table>
+			<col width="100px">
+			<col width="400px">
+			<col width="100px">
+			
+			<tr>
+				<td colspan="3">
+					<label  for="imgInp" style="">사진 인증 하기</label><input style="text-align: center;" type="file" name="file"id="imgInp" value="사진 찾기" />
+												
+					<c:choose>
+						<c:when test="${HcInChkDto.inChkPhoto2 eq null or HcInChkDto.inChkPhoto2 eq '' }">
+							<img id="blah" src="img/white.png" alt="your image" width="100%" height="400px" />
+						</c:when>
+				
+						<c:otherwise>
+							<img id="blah" src="resources/${HcInChkDto.inChkPhoto2}" alt="your image" width="100%" height="400px" />
+						</c:otherwise>
+					</c:choose>
+				</td>          
+			</tr> 
+     		<tr >
+				<th>아아디</th>
+				<td colspan="3">${HcInChkDto.id}</td>
+      		</tr>
+      		<tr >
+				<th>제목</th>
+				<td colspan="3"><input class="contents" type="text" name="inChkTitle" style="width: 490px;" required="required" autocomplete="off" value="${HcInChkDto.inChkTitle}"/></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td colspan="3"><textarea class="contents" style="width: 490px;"  rows="5" cols="55" name="inChkContent" required="required" autocomplete="off" >${HcInChkDto.inChkContent}</textarea></td>
+			</tr>
+			<tr>
+				<td colspan="3" style="text-align: right;">
+				<input class="btn btn-default btn-xs" type="button"  value="삭제" onclick="location.href='photoInChkDelete.do?pKey=${HcInChkDto.pKey}&id=${HcInChkDto.id}'"/><input class="btn btn-default btn-xs" type="submit"  value="확인"/>
+				</td>
+      		</tr>
 	   </table>
 	</form>
 	</div>

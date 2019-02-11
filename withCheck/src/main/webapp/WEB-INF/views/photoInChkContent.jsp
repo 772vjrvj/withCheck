@@ -91,50 +91,55 @@ h5 {
 </head>
 <body>
 	<div id="container">
-	<div id="tit">
-	<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">${diffdays}</span>/${dto.term})
-	</div>
-	   <br/>
-	   <input type="hidden" name="id" value="${HcInChkDto.id}"/>
-	   <input type="hidden" name="pKey" value="${HcInChkDto.pKey}"/>
-		
-	   
-	   <table>
-	      <col width="100px">
-	      <col width="400px">
-	      <col width="100px">
-	      <tr>
-	         <td colspan="3">
-	         <img id="blah" src="resources/${HcInChkDto.inChkPhoto2}" alt="your image" width="100%" height="400px" />         
+		<div id="tit">
+			<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">${diffdays}</span>/${dto.term})
+		</div>
+		<br/>
+		<table>
+			<col width="100px">
+			<col width="400px">
+			<col width="100px">
+			
+			<tr>
+				<td colspan="3">
+				<c:choose>
+					<c:when test="${HcInChkDto.inChkPhoto2 eq null or HcInChkDto.inChkPhoto2 eq '' }">
+						<img id="blah" src="img/white.png" alt="your image" width="100%" height="400px" />
+					</c:when>
+					
+					<c:otherwise>
+						<img id="blah" src="resources/${HcInChkDto.inChkPhoto2}" alt="your image" width="100%" height="400px" />
+					</c:otherwise>
+				</c:choose>   
+				</td>
 	      </tr> 
 	      <tr >
-	         <th>ID</th>
+	         <th>아이디</th>
 	         <td colspan="3">${HcInChkDto.id}</td>
 	      </tr>
 	      <tr >
-	         <th>Title</th>
+	         <th>제목</th>
 	         <td colspan="3">${HcInChkDto.inChkTitle}</td>
 	
 	      </tr>
 	      <tr>
-	         <th>Content</th>
+	         <th>내용</th>
 	         <td colspan="3">${HcInChkDto.inChkContent}</td>
 	      </tr>
-	      <tr>
-	         <td colspan="3" style="text-align: right;">
-	            <input class="btn btn-default btn-xs" type="button"  value="Before" onclick="location.href='habitCalDetail.do?pKey=${dto.pKey}&id=${dto.id}'"/>
            		<c:choose>
 					<c:when test="${HcInChkDto.id eq loginId}">
-		         	<input class="btn btn-default btn-xs" type="button"  value="Update"  onclick="location.href='photoInChkCrud.do?id=${HcInChkDto.id}&inChkDate=${HcInChkDto.inChkDate}&pKey=${HcInChkDto.pKey}&crud=update'"/>
-
+	      				<tr>
+	         				<td colspan="3" style="text-align: right;">
+	         					<input class="btn btn-default btn-xs" type="button"  value="확인"  onclick="location.href='habitCalWithDetail.do?id=${HcInChkDto.id}&pKey=${HcInChkDto.pKey}'"/>
+		         				<input class="btn btn-default btn-xs" type="button"  value="수정"  onclick="location.href='photoInChkCrud.do?id=${HcInChkDto.id}&inChkDate=${HcInChkDto.inChkDate}&pKey=${HcInChkDto.pKey}&crud=update'"/>
+	         				</td>
+	      				</tr>
 					</c:when>
 					<c:otherwise>
 					
 					</c:otherwise>				
 				</c:choose>
-	         </td>
-	      </tr>
-	   </table>
+		</table>
 	</div>
 </body>
 </html>

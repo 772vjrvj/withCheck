@@ -130,7 +130,7 @@ $(document).ready(function() {
 				var count=obj["count"]//[EmpDto,EmpDto,EmpDto,EmpDto,...]
 				if(count>=6){
 					alert("습관갯수가 현재 꽉 찼습니다. 종료후 만들어주세요");
-				    location.href = "main.do?id=${loginId}&role=${loginRole}"
+					return false;
 				}else{
 					location.href="habitCalForm.do?id=${loginId}" 
 				}

@@ -105,7 +105,18 @@ public interface IHcDao {
 	//V시작일 검색
 	public List<HcDto> getSearchStartDate(String searchStartDate, String withh);
    	
+	//V해당일 인증해야 하는 것들 다 가지고 오기
+	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto);
 	
+	//V인증값 가저오기
+	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto);
+   
+	//V인증사진 올리기
+	public boolean updateHcInChk(HcInChkDto HcInChkDto);   
+	
+	//V인증 삭제하기
+	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto);   
+
 	
 	//유저 정보 변경
 	public boolean updateUser(HcLoginDto dto);
@@ -124,21 +135,14 @@ public interface IHcDao {
 	//종료일이 지난 모든 리스트들 가저오기
 	public List<HcDto> getAllListEndY(String id);
 
-	//인증값 가저오기
-	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto);
-   
-	//인증 삭제하기
-	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto);   
 
-	//해당일 인증해야 하는 것들 다 가지고 오기
-	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto);
+
 
 	
 	
    public List<HcDto> searchContentId(String searchContent);
    public List<HcDto> searchContentTitle(String searchContent);
    
-   public boolean updateHcInChk(HcInChkDto HcInChkDto);   
 
    public List<HcLoginDto> getAllUser();
    public boolean updateRoleUser(String id, String role,String enabled);

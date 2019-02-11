@@ -63,6 +63,10 @@ public interface IHcService {
 	//V습관달력 한개 구하기
 	public HcDto getHabitCalListOne(String pKey,String id);
 	
+	//VpKey가 같은 습관달력들 구하기
+	public List<HcDto> getHabitCalList(String pKey);
+		
+	
 	//V체크 값들 가저오기
 	public List<String> habitCalTakeChk(String pKey);	
 	
@@ -105,7 +109,19 @@ public interface IHcService {
 	//V시작일 검색
 	public List<HcDto> getSearchStartDate(String searchStartDate, String withh);
 	 	
+	//V해당일 인증해야 하는 것들 다 가지고 오기	   
+	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto);
 
+	//V인증값 가저오기
+	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto);	
+	
+	//V인증 사진 올리기
+	public boolean updateHcInChk(HcInChkDto HcInChkDto);   
+
+	//V인증삭제하기
+	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto);   
+
+	
 	
 	//유저 정보 변경
 	public boolean updateUser(HcLoginDto dto);
@@ -117,29 +133,19 @@ public interface IHcService {
 	//탈퇴한 아이디 리스트 지우기
 	public boolean deleList(String id);
 
-	//pKey가 같은 습관달력들 구하기
-	public List<HcDto> getHabitCalList(String pKey);
-	
+
 
 	//종료일이 지난 모든 리스트들 가저오기
 	public List<HcDto> getAllListEndY(String id);
 
-	//인증값 가저오기
-	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto);	
 
-	//인증삭제하기
-	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto);   
 	   
-	//해당일 인증해야 하는 것들 다 가지고 오기	   
-	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto);
 
 	
    public List<HcDto> searchContentId(String searchContent);
    public List<HcDto> searchContentTitle(String searchContent);
    
    
-   public boolean updateHcInChk(HcInChkDto HcInChkDto);   
-
 
    public List<HcLoginDto> getAllUser();
    public boolean updateRoleUser(String id, String role,String enabled);

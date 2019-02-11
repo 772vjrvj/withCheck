@@ -338,10 +338,40 @@ public class HcDaoImp implements IHcDao {
 		return sqlSession.selectList(namespace+"getSearchStartDate",map);
 	};	
 	
+	//V해당일 인증해야 하는 것들 다 가지고 오기
+	@Override
+	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto){
+		System.out.println("HcDaoImp getHcInChk");																																
+		List<HcInChkDto>list=new ArrayList<HcInChkDto>();
+		list=sqlSession.selectList(namespace+"getHcInChk",HcInChkDto);
+		return list;      
+	}	
+	
+	//V인증값 가저오기
+	@Override
+	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto){
+		System.out.println("HcDaoImp getHcUserInChk");																																		
+		return sqlSession.selectOne(namespace+"getHcUserInChk",HcInChkDto);      
+	}   	
+	
+	//V인증사진 올리기
+	@Override
+	public boolean updateHcInChk(HcInChkDto HcInChkDto) {
+		System.out.println("HcDaoImp updateHcInChk");																																				
+		int count = 0;
+		count=sqlSession.update(namespace+"updateHcInChk", HcInChkDto);
+		return count > 0 ? true : false;
+	}
 	
 	
-	
-	
+	//V인증 삭제
+	@Override
+	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto){
+		System.out.println("HcDaoImp deleteHcUserInChk");
+		int count = 0;
+		count=sqlSession.update(namespace+"deleteHcUserInChk",HcInChkDto); 
+		return count>0?true:false;        
+	}      
 	
 	//유저 정보 변경
 	@Override
@@ -389,37 +419,16 @@ public class HcDaoImp implements IHcDao {
 		return list;
 	}   
    
-	//인증값 가저오기
-	@Override
-	public HcInChkDto getHcUserInChk(HcInChkDto HcInChkDto){
-		return sqlSession.selectOne(namespace+"getHcUserInChk",HcInChkDto);      
-	}   
 
 
-	//인증 삭제
-	@Override
-	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto){
-		int count = 0;
-		count=sqlSession.update(namespace+"deleteHcUserInChk",HcInChkDto); 
-		return count>0?true:false;        
-	}      
+
+
 	 
 
-	//해당일 인증해야 하는 것들 다 가지고 오기
-	@Override
-	public List<HcInChkDto> getHcInChk(HcInChkDto HcInChkDto){
-		List<HcInChkDto>list=new ArrayList<HcInChkDto>();
-		list=sqlSession.selectList(namespace+"getHcInChk",HcInChkDto);
-		return list;      
-	}
+
 
    
-   @Override
-   public boolean updateHcInChk(HcInChkDto HcInChkDto) {
-      int count = 0;
-      count=sqlSession.update(namespace+"updateHcInChk", HcInChkDto);
-      return count > 0 ? true : false;
-   }
+
 
    
    

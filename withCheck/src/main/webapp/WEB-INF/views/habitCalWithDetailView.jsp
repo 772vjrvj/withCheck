@@ -7,75 +7,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>Detail</title>
+<title>habitCalWithDetailView</title>
+
 <!-- 합쳐지고 최소화된 최신 CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <!-- 부가적인 테마 -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 	
-	<script type="text/javascript">
-	
-	$(function(){
-	
-	    $("#intoper").click(function(){
-	        if($("#list").css("display") == "none"){
-	            $("#list").slideDown();
-	        }else{
-	            $("#list").slideUp();
-	        }
-	       });   
-	
-	
-	});
-	
-	   
-	function myFunction2(){
-		
-		$.ajax({
-			url:"ajaxCheck.do",   //url:"employee_servlet.do?fname=", 원래는 이런식인데 date로 
-			method:"get",
-			data:"id=${loginId}",
-			async:false,
-			dataType:"json",
-			success:function(obj){//obj{"lists":[EmpDto,EmpDto,EmpDto,EmpDto,...]}
-
-				var count=obj["count"]//[EmpDto,EmpDto,EmpDto,EmpDto,...]
-				if(count>=6){
-					alert("습관갯수가 현재 꽉 찼습니다. 종료후 만들어주세요");
-// 				    location.href = "habitCalWithDetailView.do?id=${dto.id}&pKey=${dto.pKey}"
-				    return false;	
-				}else{
-					location.href="promise.do?id=${loginId}&pKey=${dto.pKey}&hostId=${dto.id}";
-	
-				}
-
-			},
-			error:function(){
-				alert("서버통신실패~~");
-			}
-		});		
-		
-		
-		
-	}
-	
-
-	
-	
-	
-	</script>
-	<style type="text/css">
-	
+<style type="text/css">
 	@keyframes click-wave {
 	  0% {
 	    height: 40px;
 	    width: 40px;
 	    opacity: 0.35;
 	    position: relative;
-
 	  }
 	  
 	  100% {
@@ -86,7 +35,6 @@
 	    opacity: 0;
 	  }
 	}
-	
 	.option-input {
 	  -webkit-appearance: none;
 	  -moz-appearance: none;
@@ -137,7 +85,7 @@
 	  position: relative;
 	  z-index: 100;
 	}
-		img{
+	img{
 		top: 28%;
 		left:32%;
 		text-align: center;
@@ -146,8 +94,7 @@
 		opacity: 0.4;
 		z-index: -5;
 		position: absolute;
-		}
-	
+	}
 	   #calendar{
 	      border: 1px solid #000000;
 	      border-collapse: collapse;
@@ -155,37 +102,29 @@
 	   #calendar th{
 	      width:80px;
 	      background-color: #000000;
-	      text-align: center;
-	      
+	      text-align: center; 
 	   }
-	   
 	   #calendar td{
 	      width:100px;
 	      height:100px;
 	      text-align: left;
 	      vertical-align: top;
 	   }
-	
 	   #list{
 	   width: 564px;
 	   display: none;
 	   text-align:left;
 	   }
-	
 	   #container{
 	   width: 800px;
 	   margin: 0 auto 0 auto;
 	   }
-	   
-	   
 	   #calendartitle {
 	      border: 1px solid #000000;
 	      border-collapse: collapse;
 	      height: 90px;
 	      margin: auto;
-	      
 	   }
-	   
 	   table{
 	      margin: auto;
 	      border-collapse: collapse;
@@ -197,8 +136,50 @@
 	   td{
 	   		font-size: 18px;
 	   }	   
-
 </style>
+
+<script type="text/javascript">
+	$(function(){
+		$("#intoper").click(function(){
+			if($("#list").css("display") == "none"){
+				$("#list").slideDown();
+		    }else{
+		        $("#list").slideUp();
+		    }
+	   });   
+	});
+
+	function myFunction2(){
+		
+		$.ajax({
+			url:"ajaxCheck.do",   //url:"employee_servlet.do?fname=", 원래는 이런식인데 date로 
+			method:"get",
+			data:"id=${loginId}",
+			async:false,
+			dataType:"json",
+			success:function(obj){//obj{"lists":[EmpDto,EmpDto,EmpDto,EmpDto,...]}
+	
+				var count=obj["count"]//[EmpDto,EmpDto,EmpDto,EmpDto,...]
+				if(count>=6){
+					alert("습관갯수가 현재 꽉 찼습니다. 종료후 참가하세요");
+				    return false;	
+				}else{
+					location.href="promise.do?id=${loginId}&pKey=${dto.pKey}&hostId=${dto.id}";
+	
+				}
+	
+			},
+			error:function(){
+				alert("서버통신실패~~");
+			}
+		});		
+	
+	
+	
+}
+
+
+</script>
 </head>
 <body>
 	<jsp:include page="style.jsp"/>
@@ -216,6 +197,7 @@
 			<tr><th colspan="3" style="color:#245682; text-align: center; font-size: 20px;">${dto.title}</th></tr>
 			<tr><td style="color: white">&nbsp;</td></tr>
    		</table>   
+		
 		<table id="calendartitle" border="1" style="border: 3px solid #000000;">
 			<col width="188px">
 			<col width="188px">
@@ -291,7 +273,7 @@
 									<span style="color: red">▶</span>${list.id} &nbsp;
 								</c:when>
 								<c:otherwise>
-									<span style="color: blue">▶</span>${list.id} &nbsp;
+									<span style="color: black">▶</span>${list.id} &nbsp;
 								</c:otherwise>         
 							</c:choose>
 						</c:forEach>
@@ -321,7 +303,7 @@
 		                <c:when test="${i gt map.stYear and i lt map.edYear}">
 							<c:set var="st" value="1"/><c:set var="ed" value="12"/>
 		                </c:when>               
-		                <c:when test="${map.stYear eq map.edYear}">
+		                <c:when test="${i eq map.edYear}">
 							<c:set var="st" value="1"/><c:set var="ed" value="${map.edMonth}"/>
 		                </c:when>               
 		            </c:choose>

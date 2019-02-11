@@ -77,7 +77,7 @@
             <col width="400px">
             <col width="400px">
             <tr>
-               <td><input id="id" name="id" style="width: 400px;" value="" class="form-control" type="text"  placeholder="Input Your Id"/></td>
+               <td><input id="id" name="id" style="width: 400px;" value="" autocomplete="off" class="form-control" type="text"  placeholder="Input Your Id"/></td>
             </tr>
             <tr>
                <td><input class="form-control" type="password" name="password" placeholder="Input Your Password"/></td>

@@ -332,7 +332,7 @@ public class HomeController implements ServletContextAware {
 	//VStart(만들기) habitCalrForm.jsp 에서 입력한 값들이 넘어 온다.       
 	@RequestMapping(value = "/habitCalInsert.do", method = RequestMethod.POST)
 	public String habitCalInsert(String year, String month, String date, HcDto HcDto, Locale locale, Model model) {
-    	  
+    	  System.out.println("HcDto ::::::"+ HcDto);
 		logger.info("habitCalInsert {}.", locale);
       
 		//시작일(stDate) yymmdd만들고 setter에 넣기
@@ -483,7 +483,7 @@ public class HomeController implements ServletContextAware {
 				//인증하기 해당 날짜에 해당 목록
 				List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, today1+""));
 				view.addObject("list",list);
-				view.addObject("diffdays",diffdays);
+				view.addObject("diffdays",diffdays+1);
 				view.addObject("map",map);
 				view.addObject("dto",dto);
 				view.setViewName("photoInChk");
@@ -685,9 +685,9 @@ public class HomeController implements ServletContextAware {
        logger.info("함께하기 목록 {}.", locale);
        ModelAndView view = new ModelAndView();
        
-      	 List<HcDto> list1=hcService.getAllHcListWith();
-      	 view.addObject("list1",list1);
-      	 view.setViewName("boardListWith");
+       List<HcDto> list1=hcService.getAllHcListWith();
+       view.addObject("list1",list1);
+       view.setViewName("boardListWith");
 
        return view;
     } 	
@@ -771,7 +771,7 @@ public class HomeController implements ServletContextAware {
 				//인증하기 해당 날짜에 해당 목록
 				List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, today1+""));
 				view.addObject("list",list);
-				view.addObject("diffdays",diffdays);
+				view.addObject("diffdays",diffdays+1);
 				view.addObject("map",map);
 				view.addObject("dto",dto);
 				view.setViewName("photoInChkView");
@@ -798,7 +798,272 @@ public class HomeController implements ServletContextAware {
 
 	}
 	
+	//V서약페이지로 이동
+    @RequestMapping(value = "/promise.do", method = RequestMethod.GET)
+    public String promise(String id, String hostId, String pKey, Locale locale, Model model) {
+    	logger.info("promise {}.", locale);
+    	Map<String, String> map = new HashMap<String, String>();
+    	map.put("id", id);
+    	map.put("pKey", pKey);
+    	map.put("hostId", hostId);
+    	model.addAttribute("map", map);
 
+    	return "promise";
+    }	
+	
+
+    //V서약하면 해당 습관달력의 날짜 만큼 인증페이지 만들어짐
+    @RequestMapping(value = "/promiseCheck.do", method = RequestMethod.POST)
+    public String promiseCheck(String id, String pKey, String hostId, String promise, Locale locale, Model model) {
+		logger.info("promiseCheck {}.", locale);
+       
+    	if(promise.equals("on")) {
+      	 
+    		HcDto HcDto = hcService.getHabitCalListOne(pKey,hostId);
+    		System.out.println("HcDto promiseCheck:"+HcDto);
+    		int intoper=hcService.habitCalIntoPerCount(pKey);
+
+	       	if(intoper>=HcDto.getRecruit()) {
+	       		model.addAttribute("msg","인원이 꽉찼습니다.");
+	       		return "error";
+	       	}else {
+	          	HcDto.setId(id);
+	          	HcDto.setHost("N");
+	          	System.out.println("확인확인:" + HcDto);
+	          	//참가자 아이디  hcboard 만들기
+	           	System.out.println("HcDto promiseCheck2:"+HcDto);
+	          	boolean isS=hcService.habitCalInsert(HcDto);
+	
+	          	Map<String, Integer> map=Util.DetailYYMMDD(HcDto);
+	          	
+	          	cal.set(map.get("stYear"), map.get("stMonth")-1, map.get("stDate"));
+	
+	          	//참가자 인증 만들기
+	          	for (int i = 0; i < map.get("term"); i++) {
+	
+	          		cal.add(Calendar.DATE, i);
+	              	String inChkDate =SimpleDateFormat.format(cal.getTime());
+	              	boolean isS1 = hcService.insertHcInChk(new HcInChkDto(pKey, id, HcDto.getTitle(), inChkDate));
+	                 
+	              	if(isS1) {
+	              		System.out.println("insertHcInChk term"+i+"에입 력성공");
+	              	}else {
+	              		model.addAttribute("msg","실패 했습니다.!");
+	              		return "error";
+	              	}
+	          	}               
+
+		             
+	          	if(isS==true) {
+	          		System.out.println("값 입력 성공");
+	                return "redirect:habitCalDetail.do?id="+id+"&pKey="+pKey+"&withh=Y";
+	
+	          	}else {
+	                System.out.println("값 입력 실패");
+	                model.addAttribute("msg","값 입력에 실패했습니다.2");
+	                return "error";      
+	          	}
+             
+	       	}
+                      
+       }else {
+          model.addAttribute("msg","서약에 실패 했습니다.");
+          return "error";
+       }
+
+	}        
+    
+	//V함께하기 해당일 내용 상세 보기 수정하기 입력하기
+	@RequestMapping(value = "/photoInChkCrud.do", method = RequestMethod.GET)
+		public ModelAndView photoInChkCrud(String inChkDate,String crud, String id, String pKey, Locale locale, Model model) throws ParseException {
+		logger.info("photoInChkCrud {}.", locale);
+		ModelAndView view = new ModelAndView();		
+		HcDto dto = hcService.getHabitCalListOne(pKey,id);
+	    System.out.println("dto:"+dto);
+		long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
+	
+		Map<String, Integer> map =Util.TodayYYMMDD();
+		HcInChkDto HcInChkDto = hcService.getHcUserInChk(new HcInChkDto(pKey,inChkDate ,id));
+			
+		view.addObject("diffdays",diffdays);
+		view.addObject("dto",dto);   
+		view.addObject("map",map);
+		view.addObject("HcInChkDto",HcInChkDto);    
+		
+		if(crud.equals("content")) {
+			view.setViewName("photoInChkContent");
+		}else if(crud.equals("update")) {
+			view.setViewName("photoInChkUpdate");
+		}else {
+			view.setViewName("photoInChkInsert");
+		}
+	
+		return view;		
+	}   
+	
+	//V인증 가진 insert
+	@RequestMapping(value = "/photoInChkInsert.do", method = RequestMethod.POST)
+	public String photoInChkInsert(HcInChkDto HcInChkDto, Locale locale, Model model) throws Exception{
+		logger.info("photoInChkInsert {}.", locale);
+		SimpleDateFormat SimpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+		Date currentTime = new Date ();
+		String today = SimpleDateFormat.format(currentTime);
+		String inTime   = new java.text.SimpleDateFormat("HHmmss").format(new java.util.Date());
+
+        String HH=inTime.substring(0,2)+"시";
+        String mm=inTime.substring(2,4)+"분";
+        String tt=inTime.substring(4,6)+"초";
+        HcInChkDto.setInChkTime(HH+mm+tt);
+        HcInChkDto.setInChkDate(today+"");
+        
+        MultipartFile f = HcInChkDto.getFile();
+        if(!f.isEmpty()) {//파일 업로드가 됐다면
+      	  String orgname=f.getOriginalFilename();
+      	  String newname=HcInChkDto.getId()+today+orgname;
+      	  String path=servletContext.getRealPath("/resources");
+      	  File file=new File(path+File.separator+newname);
+      	  HcInChkDto.setInChkPhoto(orgname);
+      	  HcInChkDto.setInChkPhoto2(newname);
+      	  f.transferTo(file);
+        }
+        
+        System.out.println("HcInChkDto:"+HcInChkDto);
+        boolean isS=hcService.updateHcInChk(HcInChkDto);
+
+        if(isS==true) {
+      	  
+        	int beforeCount = 0;
+        	List<HcInChkDto> beforeList =hcService.getHcInChk(new HcInChkDto(HcInChkDto.getpKey(), today));
+        	System.out.println("beforeList" + beforeList + "size()" + beforeList.size());
+        	for (int i = 0; i < beforeList.size(); i++) {
+                		
+        		if (beforeList.get(i).getInChkPhoto()==null) {
+        			System.out.println("널이다.");
+        		}else {
+        			beforeCount++;					
+        		}
+        	}                
+        	
+        	if((beforeCount/(double)beforeList.size()) > 0.5) {
+        		hcService.habitCalInsertChk(HcInChkDto.getpKey(), today);
+        		
+        		int chkCount=hcService.habitCalChkCount(HcInChkDto.getpKey());
+
+        		hcService.updateChkCount(new HcDto(HcInChkDto.getpKey(), chkCount));
+        	}else {
+
+        	}
+      	  
+            System.out.println("입력 성공");
+            return "redirect:photoInChkCrud.do?id="+HcInChkDto.getId()+"&pKey="+HcInChkDto.getpKey()+"&crud=content"+"&inChkDate="+HcInChkDto.getInChkDate();
+
+         }else {
+            System.out.println("입력 실패");
+            model.addAttribute("msg","값 입력에 실패했습니다.");
+            return "error";      
+         }          
+        
+     }
+
+    //V사진 인증 업데이트
+    @RequestMapping(value = "/photoInChkUpdate.do", method = RequestMethod.POST)
+    public String photoInChkUpdate(HcInChkDto HcInChkDto, Locale locale, Model model) throws Exception{
+  	  
+
+        SimpleDateFormat SimpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date currentTime = new Date ();
+        String today = SimpleDateFormat.format(currentTime);
+        String inTime   = new java.text.SimpleDateFormat("HHmmss").format(new java.util.Date());
+
+        String HH=inTime.substring(0,2)+"시";
+        String mm=inTime.substring(2,4)+"분";
+        String tt=inTime.substring(4,6)+"초";
+        HcInChkDto.setInChkTime(HH+mm+tt);
+  	  	HcInChkDto.setInChkDate(today);
+
+        MultipartFile f = HcInChkDto.getFile();
+        System.out.println("file f : " + f);
+        
+        if(!f.isEmpty()) {//파일 업로드가 됐다면
+      	  String orgname=f.getOriginalFilename();
+      	  String newname=HcInChkDto.getId()+today+orgname;
+      	  String path=servletContext.getRealPath("/resources");
+      	  System.out.println("path:"+path);          
+      	  File file=new File(path+File.separator+newname);
+      	  HcInChkDto.setInChkPhoto(orgname);
+      	  HcInChkDto.setInChkPhoto2(newname);
+      	  f.transferTo(file);
+      	  System.out.println(HcInChkDto);
+        }
+        
+        if(HcInChkDto.getInChkPhoto()==null||HcInChkDto.getInChkPhoto2()==null) {
+        	
+        	HcInChkDto HcInChkDto1 = hcService.getHcUserInChk(new HcInChkDto(HcInChkDto.getpKey(),HcInChkDto.getInChkDate() ,HcInChkDto.getId()));
+        	System.out.println("delete HcInChkDto1 : "+ HcInChkDto1);
+        	HcInChkDto.setInChkPhoto(HcInChkDto1.getInChkPhoto());
+        	HcInChkDto.setInChkPhoto2(HcInChkDto1.getInChkPhoto2());        
+        	
+        }
+        
+
+        boolean isS=hcService.updateHcInChk(HcInChkDto);
+        if(isS==true) {
+      	  System.out.println("업데이트 성공");
+            return "redirect:photoInChkCrud.do?id="+HcInChkDto.getId()+"&pKey="+HcInChkDto.getpKey()+"&crud=content"+"&inChkDate="+HcInChkDto.getInChkDate();
+        }else {
+      	  System.out.println("업데이트 실패");
+      	  model.addAttribute("msg","업데이트에 실패했습니다.");
+      	  return "error";           
+        }          
+    }
+    
+	
+	//V인증사진 삭제
+    @RequestMapping(value = "/photoInChkDelete.do", method = RequestMethod.GET)
+    public String photoInChkDelete(String id, String pKey, Locale locale,  Model model){
+		logger.info("photoInChkDelete {}.", locale);
+  	  
+        boolean isS=hcService.deleteHcUserInChk(new HcInChkDto(pKey,today ,id));
+
+
+        if(isS==true) {
+      	  
+        	int beforeCount = 0;
+        	List<HcInChkDto> beforeList =hcService.getHcInChk(new HcInChkDto(pKey, today));
+        	for (int i = 0; i < beforeList.size(); i++) {
+        		if (beforeList.get(i).getInChkPhoto2()==null) {
+        			
+        		}else {
+        			beforeCount++;					
+        		}
+        	}                
+        	
+        	if((beforeCount/(double)beforeList.size()) <= 0.5) {
+        		boolean isS2=hcService.habitCalChkDelete(pKey, today);
+        		int chkCount=hcService.habitCalChkCount(pKey);
+        		hcService.updateChkCount(new HcDto(pKey, chkCount));
+        		
+        	}else {
+
+        	}
+      	  
+            System.out.println("삭제 성공");
+            return "redirect:habitCalDetail.do?id="+id+"&pKey="+pKey+"&withh=Y";
+
+         }else {
+            System.out.println("삭제 실패");
+            model.addAttribute("msg","값 입력에 실패했습니다.");
+            return "error";      
+         }          
+        
+     }    
+
+    
+    
+    
+	
+	
+	
 	//현재 진행중인 리스트 평균 각각 퍼센트 구하기
 	@RequestMapping(value = "/totalPer.do", method = RequestMethod.GET)
 	public ModelAndView totalPer(String id, Locale locale, Model model) {
@@ -889,41 +1154,7 @@ public class HomeController implements ServletContextAware {
 		}
 	}         
    
-     
-      
-	//포인트 - 아직 완성 안됨
-	@RequestMapping(value = "/point.do", method = RequestMethod.GET)
-	public String point(String id, Locale locale, Model model) {
-		logger.info("포인트 {}.", locale);
-
-		HcLoginDto HcLoginDto= hcService.getUser(id);
-
-		model.addAttribute("HcLoginDto", HcLoginDto);
-		return "point";
-	}   
-   
-    
-   
-
-         
-
-	
-
-	
-
-
-
-
-    
-
-
-         
-
-	
-	
-	
  
-
 
 	//Alone or With Detail페이지로 가기위해 들리는 곳
 	@RequestMapping(value = "/habitCalDetailView.do", method = RequestMethod.GET)
@@ -939,13 +1170,6 @@ public class HomeController implements ServletContextAware {
 
 	}  	
 	
-	
-
-	
-
-	
-
-
 	
 	//모든 회원들의 '함께' 하기 리스트 상세보기 로그인 사용자 보기 수정불가
 	@RequestMapping(value = "/photoInChkView.do", method = RequestMethod.GET)
@@ -1000,82 +1224,6 @@ public class HomeController implements ServletContextAware {
 	}	
 	
 	
-	//서약페이지로 이동
-    @RequestMapping(value = "/promise.do", method = RequestMethod.GET)
-    public String promise(String id, String hostId, String pKey, Locale locale, Model model) {
-    	logger.info("promise {}.", locale);
-    	Map<String, String> map = new HashMap<String, String>();
-    	map.put("id", id);
-    	map.put("pKey", pKey);
-    	map.put("hostId", hostId);
-    	model.addAttribute("map", map);
-
-    	return "promise";
-    }	
-	
-    //서약하면 해당 습관달력의 날짜 만큼 인증페이지 만들어짐
-    @RequestMapping(value = "/promiseCheck.do", method = RequestMethod.POST)
-    public String promiseCheck(String id, String pKey, String hostId, String promise, Locale locale, Model model) {
-		logger.info("promiseCheck {}.", locale);
-       
-    	if(promise.equals("on")) {
-      	 
-       	HcDto HcDto = hcService.getHabitCalListOne(pKey,hostId);
-       	System.out.println("HcDto promiseCheck:"+HcDto);
-       	int intoper=hcService.habitCalIntoPerCount(pKey);
-
-	       	if(intoper>=HcDto.getRecruit()) {
-	       		model.addAttribute("msg","인원이 꽉찼습니다.");
-	       		return "error";
-	       	}else {
-	          	HcDto.setId(id);
-	          	HcDto.setHost("N");
-	          	//참가자 아이디  hcboard 만들기
-	           	System.out.println("HcDto promiseCheck2:"+HcDto);
-	          	boolean isS=hcService.habitCalInsert(HcDto);
-	
-	          	Map<String, Integer> map=Util.DetailYYMMDD(HcDto);
-	          	
-	          	cal.set(map.get("stYear"), map.get("stMonth")-1, map.get("stDate"));
-	
-	          	//참가자 인증 만들기
-	          	for (int i = 0; i < map.get("term"); i++) {
-	
-	          		cal.add(Calendar.DATE, i);
-	              	String inChkDate =SimpleDateFormat.format(cal.getTime());
-	              	boolean isS1 = hcService.insertHcInChk(new HcInChkDto(pKey, id, HcDto.getTitle(), inChkDate));
-	                 
-	              	if(isS1) {
-	              		System.out.println("insertHcInChk term"+i+"에입 력성공");
-	              	}else {
-	              		model.addAttribute("msg","실패 했습니다.!");
-	              		return "error";
-	              	}
-	          	}               
-
-		             
-	          	if(isS==true) {
-	          		System.out.println("값 입력 성공");
-	                return "redirect:habitCalDetail.do?id="+id+"&pKey="+pKey;
-	
-	          	}else {
-	                System.out.println("값 입력 실패");
-	                model.addAttribute("msg","값 입력에 실패했습니다.2");
-	                return "error";      
-	          	}
-             
-	       	}
-                      
-       }else {
-          model.addAttribute("msg","서약에 실패 했습니다.");
-          return "error";
-       }
-
-	}    
-    
-    
-
-    
       
 	//달력 삭제 및 취소
 	@RequestMapping(value = "/habitCalDeleteWithAll.do", method = RequestMethod.GET)
@@ -1123,201 +1271,19 @@ public class HomeController implements ServletContextAware {
 		return view;
 	}   
 
-    //해당일 내용 상세 보기 수정하기 입력하기
-	@RequestMapping(value = "/photoInChkCrud.do", method = RequestMethod.GET)
-		public ModelAndView photoInChkCrud(String inChkDate,String crud, String id, String pKey, Locale locale, Model model) throws ParseException {
-		logger.info("photoInChkCrud {}.", locale);
-		ModelAndView view = new ModelAndView();		
-		HcDto dto = hcService.getHabitCalListOne(pKey,id);
-        System.out.println("dto:"+dto);
-		long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
-
-		Map<String, Integer> map =Util.TodayYYMMDD();
-		HcInChkDto HcInChkDto = hcService.getHcUserInChk(new HcInChkDto(pKey,inChkDate ,id));
-    		
-		view.addObject("diffdays",diffdays);
-		view.addObject("dto",dto);   
-		view.addObject("map",map);
-		view.addObject("HcInChkDto",HcInChkDto);    
-		
-		if(crud.equals("content")) {
-			view.setViewName("photoInChkContent");
-		}else if(crud.equals("update")) {
-			view.setViewName("photoInChkUpdate");
-		}else if(crud.equals("contentView")) {	
-			view.setViewName("photoInChkContentView");
-		}else {
-			view.setViewName("photoInChkInsert");
-		}
-
-		return view;		
-	}
 
 
-	//값 입력
-	@RequestMapping(value = "/photoInChkInsert.do", method = RequestMethod.POST)
-	public String photoInChkInsert(HcInChkDto HcInChkDto, Locale locale, Model model) throws Exception{
-		logger.info("photoInChkInsert {}.", locale);
-		SimpleDateFormat SimpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-		Date currentTime = new Date ();
-		String today = SimpleDateFormat.format(currentTime);
-		String inTime   = new java.text.SimpleDateFormat("HHmmss").format(new java.util.Date());
 
-        String HH=inTime.substring(0,2)+"시";
-        String mm=inTime.substring(2,4)+"분";
-        String tt=inTime.substring(4,6)+"초";
-        HcInChkDto.setInChkTime(HH+mm+tt);
-        HcInChkDto.setInChkDate(today+"");
-        
-        MultipartFile f = HcInChkDto.getFile();
-        if(!f.isEmpty()) {//파일 업로드가 됐다면
-      	  String orgname=f.getOriginalFilename();
-      	  String newname=HcInChkDto.getId()+today+orgname;
-      	  String path=servletContext.getRealPath("/resources");
-      	  File file=new File(path+File.separator+newname);
-      	  HcInChkDto.setInChkPhoto(orgname);
-      	  HcInChkDto.setInChkPhoto2(newname);
-      	  f.transferTo(file);
-        }
-        
-        System.out.println("HcInChkDto:"+HcInChkDto);
-        boolean isS=hcService.updateHcInChk(HcInChkDto);
 
-        if(isS==true) {
-      	  
-        	int beforeCount = 0;
-        	List<HcInChkDto> beforeList =hcService.getHcInChk(new HcInChkDto(HcInChkDto.getpKey(), today));
-        	for (int i = 0; i < beforeList.size(); i++) {
-        		if (beforeList.get(i).getInChkPhoto().equals("/")) {
-        			
-        		}else {
-        			beforeCount++;					
-        		}
-        	}                
-        	
-        	if((beforeCount/(double)beforeList.size()) >= 0.6) {
-        		hcService.habitCalInsertChk(HcInChkDto.getpKey(), today);
-        		
-        		int chkCount=hcService.habitCalChkCount(HcInChkDto.getpKey());
-
-        		hcService.updateChkCount(new HcDto(HcInChkDto.getpKey(), chkCount));
-        	}else {
-
-        	}
-      	  
-            System.out.println("입력 성공");
-            return "redirect:photoInChkCrud.do?id="+HcInChkDto.getId()+"&pKey="+HcInChkDto.getpKey()+"&crud=content"+"&inChkDate="+HcInChkDto.getInChkDate();
-
-         }else {
-            System.out.println("입력 실패");
-            model.addAttribute("msg","값 입력에 실패했습니다.");
-            return "error";      
-         }          
-        
-     }
 	
 	
 	
 	
-    @RequestMapping(value = "/photoInChkDelete.do", method = RequestMethod.GET)
-    public String photoInChkDelete(String id, String pKey, Locale locale, String paramview,  Model model){
-		logger.info("photoInChkDelete {}.", locale);
-  	  
-        boolean isS=hcService.deleteHcUserInChk(new HcInChkDto(pKey,today ,id));
-
-
-        if(isS==true) {
-      	  
-        	int beforeCount = 0;
-        	List<HcInChkDto> beforeList =hcService.getHcInChk(new HcInChkDto(pKey, today));
-        	for (int i = 0; i < beforeList.size(); i++) {
-        		if (beforeList.get(i).getInChkPhoto().equals("/")) {
-        			
-        		}else {
-        			beforeCount++;					
-        		}
-        	}                
-        	
-        	if((beforeCount/(double)beforeList.size()) < 0.6) {
-        		boolean isS2=hcService.habitCalChkDelete(pKey, today);
-        		int chkCount=hcService.habitCalChkCount(pKey);
-        		hcService.updateChkCount(new HcDto(pKey, chkCount));
-        		if(isS2==false) {
-        			System.out.println("삭제 실패");
-                    model.addAttribute("msg","값 삭제에 실패했습니다.");
-                    return "error";      
-        		}else {
-        			System.out.println("삭제 성공");
-        		}
-        		
-        	}else {
-
-        	}
-      	  
-            System.out.println("삭제 성공");
-            return "redirect:habitCalDetail.do?id="+id+"&pKey="+pKey;
-
-         }else {
-            System.out.println("입력 실패");
-            model.addAttribute("msg","값 입력에 실패했습니다.");
-            return "error";      
-         }          
-        
-     }    
-
-      
-      @RequestMapping(value = "/photoInChkUpdate.do", method = RequestMethod.POST)
-      public String photoInChkUpdate(HcInChkDto HcInChkDto, Locale locale, Model model) throws Exception{
-    	  
-
-          SimpleDateFormat SimpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-          Date currentTime = new Date ();
-          String today = SimpleDateFormat.format(currentTime);
-          String inTime   = new java.text.SimpleDateFormat("HHmmss").format(new java.util.Date());
-
-          String HH=inTime.substring(0,2)+"시";
-          String mm=inTime.substring(2,4)+"분";
-          String tt=inTime.substring(4,6)+"초";
-    	  HcInChkDto.setInChkTime(HH+mm+tt);
-    	  HcInChkDto.setInChkDate(today);
-
-          MultipartFile f = HcInChkDto.getFile();
-          if(!f.isEmpty()) {//파일 업로드가 됐다면
-        	  String orgname=f.getOriginalFilename();
-        	  String newname=HcInChkDto.getId()+today+orgname;
-        	  String path=servletContext.getRealPath("/resources");
-        	  System.out.println("path:"+path);          
-        	  File file=new File(path+File.separator+newname);
-        	  HcInChkDto.setInChkPhoto(orgname);
-        	  HcInChkDto.setInChkPhoto2(newname);
-        	  f.transferTo(file);
-          }
-
-          boolean isS=hcService.updateHcInChk(HcInChkDto);
-          if(isS==true) {
-        	  System.out.println("업데이트 성공");
-              return "redirect:photoInChkCrud.do?id="+HcInChkDto.getId()+"&pKey="+HcInChkDto.getpKey()+"&crud=content"+"&inChkDate="+HcInChkDto.getInChkDate();
-          }else {
-        	  System.out.println("업데이트 실패");
-        	  model.addAttribute("msg","업데이트에 실패했습니다.");
-        	  return "error";           
-          }          
-      }
-      
-      
-
 
       
 
-    
-
-    
-
-    
-
-    
-		
-		
+      
+ 		
 		//랭킹보기
 	    @RequestMapping(value = "/boardlistWithRanking.do", method = RequestMethod.GET)
 	    public ModelAndView boardlistWithRanking(Locale locale, Model model) {

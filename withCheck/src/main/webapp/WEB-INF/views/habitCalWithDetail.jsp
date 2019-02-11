@@ -8,14 +8,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>habitCalWithDetail</title>
-	<!-- 합쳐지고 최소화된 최신 CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-	<!-- 부가적인 테마 -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-	<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<!-- 합쳐지고 최소화된 최신 CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<!-- 부가적인 테마 -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+
 <style type="text/css">
 	@keyframes click-wave {
 		0% {
@@ -33,7 +35,6 @@
 		    opacity: 0;
 		}
 	}
-	
 	.option-input {
 	  -webkit-appearance: none;
 	  -moz-appearance: none;
@@ -84,7 +85,7 @@
 	  position: relative;
 	  z-index: 100;
 	}
-		img{
+	img{
 		top: 28%;
 		left:32%;
 		text-align: center;
@@ -93,68 +94,59 @@
 		opacity: 0.4;
 		z-index: -5;
 		position: absolute;
-		}
-	
-	   #calendar{
-	      border: 1px solid #000000;
-	      border-collapse: collapse;
-	   }
-	   #calendar th{
-	      width:80px;
-	      background-color: #000000;
-	      text-align: center
-	   }
-	   
-	   #calendar td{
-	      width:100px;
-	      height:100px;
-	      text-align: left;
-	      vertical-align: top;
-	      
-	   }
-	
-	   #list{
-	   width: 564px;
-	   display: none;
-	   text-align:left;
-	   }
-	
-	   #container{
-	   width: 800px;
-	   margin: 0 auto 0 auto;
-	   }
-	   
-	   
-	   #calendartitle {
-	      border: 1px solid #000000;
-	      border-collapse: collapse;
-	      height: 90px;
-	      margin: auto;
-	   }
-	   
-	   table{
-	      margin: auto;
-	      border-collapse: collapse;
-	      border-radius: 30px;
-	   }
-	   th{
-	   		font-size: 17px;
-	   }
-	   td{
-	   		font-size: 18px;
-	   }
-	   
+	}
+   #calendar{
+      border: 1px solid #000000;
+      border-collapse: collapse;
+   }
+   #calendar th{
+      width:80px;
+      background-color: #000000;
+      text-align: center
+   }
+   #calendar td{
+      width:100px;
+      height:100px;
+      text-align: left;
+      vertical-align: top; 
+   }
+   #list{
+   width: 564px;
+   display: none;
+   text-align:left;
+   }
+   #container{
+   width: 800px;
+   margin: 0 auto 0 auto;
+   }
+   #calendartitle {
+      border: 1px solid #000000;
+      border-collapse: collapse;
+      height: 90px;
+      margin: auto;
+   }
+   table{
+      margin: auto;
+      border-collapse: collapse;
+      border-radius: 30px;
+   }
+   th{
+   		font-size: 17px;
+   }
+   td{
+   		font-size: 18px;
+   }
 </style>
+
 <script type="text/javascript">
 	$(function(){
-	    $("#intoper").click(function(){
+		$("#intoper").click(function(){
 			if($("#list").css("display") == "none"){
-				 $("#list").slideDown();
-			}else{
-				$("#list").slideUp();
-			}
-		});   
-
+				$("#list").slideDown();
+		    }else{
+		        $("#list").slideUp();
+		    }
+	   });   
 	});
 </script>
 </head>
@@ -165,9 +157,6 @@
 	<div id="container">
 		<jsp:useBean id="Cal" class="com.hk.toCheckFinal.utils.cal"/>
 		<jsp:useBean id="Util" class="com.hk.toCheckFinal.utils.Util"/>	
-		
-		<input type="hidden" name="pKey" value="${dto.pKey}"/>
-		<input type="hidden" name="id" value="${dto.id}"/>
 		
 		<table style="border-collapse: collapse; border: white">
 			<col width="188px">
@@ -229,10 +218,10 @@
 						<c:forEach var="list" items="${list}" varStatus="status">
 							<c:choose>
 								<c:when test="${status.index eq 0}">
-									<span style="color: black">▶</span>${list.id} &nbsp;
+									<span style="color: red">▶</span>${list.id} &nbsp;
 								</c:when>
 								<c:otherwise>
-									<span style="color: white">▶</span>${list.id} &nbsp;
+									<span style="color: black">▶</span>${list.id} &nbsp;
 								</c:otherwise>         
 							</c:choose>
 						</c:forEach>
@@ -262,7 +251,7 @@
 		                <c:when test="${i gt map.stYear and i lt map.edYear}">
 							<c:set var="st" value="1"/><c:set var="ed" value="12"/>
 		                </c:when>               
-		                <c:when test="${map.stYear eq map.edYear}">
+		                <c:when test="${i eq map.edYear}">
 							<c:set var="st" value="1"/><c:set var="ed" value="${map.edMonth}"/>
 		                </c:when>               
 		            </c:choose>
