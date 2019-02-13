@@ -195,24 +195,36 @@
 			<tr>
 				<td colspan="3" style="text-align: right;">
 					<div style="vertical-align:text-top; color: #245682; font-weight: bolder; " id="withNumber">
-						D-day
-						<span style=" color: red;">${diffdays}</span>
 						
-						&nbsp;&nbsp;Recruit : 
+						<c:choose>
+							<c:when test="${dto.endList eq 'Y'}">
+							
+							</c:when>
+							<c:otherwise>
+								D-day
+								<span style=" color: red;">${diffdays}</span>							
+							</c:otherwise>
+						</c:choose>
+						&nbsp;&nbsp;모집인원 : 
 						<span style=" color: red;">${intoPer}</span>/${dto.recruit}
 					</div>
 					
 	                <input class="btn btn-default btn-xs" type="button" id="intoper"  value="참가자" />
 					
 					<c:choose>
-						<c:when test="${dto.host eq 'N'}">
-							<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWith.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>
+						<c:when test="${dto.endList eq 'Y'}">
+							<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteEndList.do?pKey=${dto.pKey}&id=${loginId}&which=completeList'"/>
 						</c:when>
 						<c:otherwise>
-							<input type="button"  class="btn btn-default btn-xs" value="${intoPer eq dto.recruit ? '모집완료':'모집중'}" disabled/>  
-							<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWithAll.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>	                        
+							<c:when test="${dto.host eq 'N'}">
+								<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWith.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>
+							</c:when>
+							<c:otherwise>
+								<input type="button"  class="btn btn-default btn-xs" value="${intoPer eq dto.recruit ? '모집완료':'모집중'}" disabled/>  
+								<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWithAll.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>	                        
+							</c:otherwise>							
 						</c:otherwise>
-					</c:choose>	
+					</c:choose>
 						
                     <div id="list" >
 						<c:forEach var="list" items="${list}" varStatus="status">
@@ -290,9 +302,7 @@
 				                </c:when>
 								<c:otherwise>
 									<p class="countview" style="color:${Util.fontColor(Cal.dayOfWeek(i,j,1), n)};">
-										<input type="button" value="${n}" onclick="location.href='photoInChk.do?
-										thisDate=${Util.substring(i)}${Util.isTwoInt(j)}${Util.isTwoInt(n)}
-										&pKey=${dto.pKey}&id=${dto.id}'" ${n>Util.substring6(map.today)? "disabled":""}>
+										<input type="button" value="${n}" onclick="location.href='photoInChkView.do?thisDate=${Util.substring(i)}${Util.isTwoInt(j)}${Util.isTwoInt(n)}&pKey=${dto.pKey}&id=${dto.id}'" ${n>Util.substring6(map.today)? "disabled":""}>
 									</p>
 									<input  class="option-input checkbox" type="checkbox" name="chk" 
 									value='${Util.substring(i)}${Util.isTwoInt(j)}${Util.isTwoInt(n)}'

@@ -87,15 +87,15 @@
       </tr>
       <tr>
          <td id="firstTd">Address</td>
-         <td id="secondTd"><input class="box" type="text" style="text-align:center;"  name="address" value="${HcLoginDto.address}"/></td>
+         <td id="secondTd"><input class="box" type="text" style="text-align:center;"  name="address" value="${HcLoginDto.address}" autocomplete="off" /></td>
       </tr>
       <tr>
          <td id="firstTd">Tel</td>
-         <td id="secondTd"><input class="box" type="tel" style="background-color:white; text-align:center;" name="phone" value="${HcLoginDto.phone}"/></td>
+         <td id="secondTd"><input class="box" type="tel" style="background-color:white; text-align:center;" name="phone" value="${HcLoginDto.phone}" autocomplete="off" /></td>
       </tr>
       <tr>
          <td id="firstTd">E-mail</td>
-         <td id="secondTd"><input class="box" type="email" style="text-align:center;" name="email" value="${HcLoginDto.email}"/></td>
+         <td id="secondTd"><input class="box" type="email" style="text-align:center;" name="email" value="${HcLoginDto.email}" autocomplete="off" /></td>
          
       </tr>
       <tr>
@@ -104,16 +104,16 @@
       </tr>
       <tr>
          <td id="firstTd">Question</td>
-         <td id="secondTd"><input class="box" type="text" style="text-align:center;" name="question" value="${HcLoginDto.question}"/></td>
+         <td id="secondTd"><input class="box" type="text" style="text-align:center;" name="question" value="${HcLoginDto.question}" autocomplete="off" /></td>
       </tr>
       <tr>
          <td id="firstTd">Answer</td>
-         <td id="secondTd"><input class="box" type="text" style="text-align:center;" name="answer" value="${HcLoginDto.answer}"/></td>
+         <td id="secondTd"><input class="box" type="text" style="text-align:center;" name="answer" value="${HcLoginDto.answer}" autocomplete="off" /></td>
       </tr>
       <tr>
          <td colspan="2" style="text-align: right;">
-            <input type="submit" class="btn btn-default btn-xs" value="Complete">
-            <input type="button" class="btn btn-default btn-xs" onclick="location.href='userinfo.do?id=${HcLoginDto.id}'" value="Cancel">
+            <input type="submit" class="btn btn-default btn-xs" value="확인">
+            <input type="button" class="btn btn-default btn-xs" onclick="location.href='userinfo.do?id=${HcLoginDto.id}'" value="취소">
          </tr>
    </table>
 </form>

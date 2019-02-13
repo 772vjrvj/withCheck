@@ -226,60 +226,46 @@
 		WHERE PKEY=#{pKey} AND INCHKDATE=#{inChkDate} AND Id=#{id}
 		</update>
 		
-		
+		<!--	V랭킹  -->
+		<select id="boardlistWithRanking" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE WITHH ='Y' AND ENDLIST='N' AND NOT HOST='N' ORDER BY CHKCOUNT DESC
+		</select>
 
-		<!--	탈퇴하기 -->
+	    <!--		V유저 정보 변경 -->
+	    <update id="updateUser" parameterType="HcLoginDto">
+	    UPDATE HCLOGINDTO SET ADDRESS=#{address}, PHONE=#{phone}, EMAIL=#{email}, QUESTION=#{question}, ANSWER=#{answer}
+	    WHERE Id=#{id}
+	    </update>  
+
+		<!--		V탈퇴하기 -->
 		<update id="deleUser" parameterType="String">
-		UPDATE HCMEMBER SET ENABLED='N'
-		WHERE Id=#{value}
+		UPDATE HCLOGINDTO SET ENABLED='N'
+		WHERE ID=#{id}
 		</update>
-      
-		<!-- 		탈퇴한 회원 모든 리스트 비활성화 -->
+     
+		<!-- 		V탈퇴한 회원 모든 리스트 비활성화 -->
 		<update id="deleList" parameterType="String">
 		UPDATE HCDTO SET HCDELETE='Y'
-		WHERE Id=#{value}
+		WHERE ID=#{id}
 		</update>
-      
 
-      
-		<!--       	종료일이 지난 모든 리스트들 가저오기 -->
+		<!--		V종료일이 지난 모든 리스트들 가저오기 -->
 		<select id="getAllListEndY" parameterType="String" resultType="HcDto">
 		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
 		FROM HCDTO WHERE ID=#{id} AND ENDLIST='Y'
 		</select>
 
 
-
-
-
-      
-
- 
-     
-      
-
 <!-- insertUser -->
 
 		<select id="getAllUser" resultType="HcLoginDto">
 		SELECT SEQ, ID, NAME, ADDRESS, PHONE, EMAIL, ENABLED, ROLE
-		FROM HCMEMBER ORDER BY NAME   
+		FROM HCLOGINDTO ORDER BY NAME   
 		</select>
 		
 		<update id="updateRoleUser" parameterType="Map">
-		UPDATE HCMEMBER SET ROLE=#{role}, ENABLED=#{enabled} WHERE ID=#{id}      
+		UPDATE HCLOGINDTO SET ROLE=#{role}, ENABLED=#{enabled} WHERE ID=#{id}      
 		</update>
-      
-      <!--          유저 정보 변경 -->
-      <update id="updateUser" parameterType="HcLoginDto">
-      UPDATE HCMEMBER SET ADDRESS=#{address}, PHONE=#{phone}, EMAIL=#{email}, QUESTION=#{question}, ANSWER=#{answer}
-      WHERE Id=#{id}
-      </update>  
-  
-
-		<!--       	랭킹  -->
-		<select id="boardlistWithRanking" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCDTO WHERE WITHH ='Y' AND ENDLIST='Y' ORDER BY CHKCOUNT DESC
-		</select>
 
     </mapper>

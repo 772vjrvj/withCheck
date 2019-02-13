@@ -198,7 +198,7 @@ function loadLiquidGauge(id, value, color, animateTime, waveHeight) {
    <c:choose>
     <c:when test="${fn:length(list1) eq 0}">
           <div id="ifnull">
-		There are no listings in progress.</div>
+		진행중인 리스트가 없습니다</div>
     </c:when>
     <c:otherwise>
        <c:forEach var="dto" items="${list1}" varStatus="status">
@@ -215,7 +215,7 @@ function loadLiquidGauge(id, value, color, animateTime, waveHeight) {
                  <figure>
                    <div class="progress-fixed__bar${status.index}"></div>
                    <div class="progress-fixed__percent${status.index}"></div>
-                   <div class="pertitle"><a href="habitCalDetail.do?calString=a&pKey=${dto.pKey}&id=${dto.id}&paramview=0">&nbsp;${dto.title}</a></div>   
+                   <div class="pertitle"><a href="habitCalDetail.do?pKey=${dto.pKey}&id=${dto.id}&withh="${dto.withh}>&nbsp;${dto.title}</a></div>   
                  </figure>
             </div>
             <input class="bar" type="hidden"  onclick="BG.init(${per},${status.index})"/>

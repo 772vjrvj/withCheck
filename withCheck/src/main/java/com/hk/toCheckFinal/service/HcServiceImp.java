@@ -270,80 +270,40 @@ public class HcServiceImp implements IHcService {
 		return hcDao.deleteHcUserInChk(HcInChkDto);
 	}      	
 	
+	//V랭킹
+	public List<HcDto> boardlistWithRanking(){
+		System.out.println("HcServiceImp boardlistWithRanking");		
+		return hcDao.boardlistWithRanking();
+
+	}
 	
-    //유저 정보 변경
+    //V유저 정보 변경
     @Override
     public boolean updateUser(HcLoginDto dto) {
-       return hcDao.updateUser(dto);
+    	System.out.println("HcServiceImp updateUser");		    	
+    	return hcDao.updateUser(dto);
     }
     
-    //탈퇴하기
+    //V탈퇴하기
     @Override
     public boolean deleUser(String id) {
-       return hcDao.deleUser(id);
+    	System.out.println("HcServiceImp deleUser");		    	
+    	return hcDao.deleUser(id);
     }
 
-	//탈퇴한 아이디 리스트 지우기
+	//V탈퇴한 아이디 리스트 지우기
 	@Override
 	public boolean deleList(String id) {
+    	System.out.println("HcServiceImp deleList");		    			
 		return hcDao.deleList(id);
 	}	    
     
-
-
-	
-	//종료일이 지난 모든 리스트들 가저오기
+	//V종료일이 지난 모든 리스트들 가저오기
 	@Override
 	public List<HcDto> getAllListEndY(String id) {
+    	System.out.println("HcServiceImp getAllListEndY");		    					
 		return hcDao.getAllListEndY(id);
 	}	
-	
-	
-	
-	
-
-   
-
-
-
-	
-
-	
-	
-
-	
-	
-	
-   @Override
-   public List<HcDto> searchContentId(String searchContent) {
-      return hcDao.searchContentId(searchContent);
-   }
-
-   @Override
-   public List<HcDto> searchContentTitle(String searchContent) {
-      return hcDao.searchContentTitle(searchContent);
-   }
-
-
-
-
-   
-
-
-
-   
-   
-   
-
-
-   
-
-   
-   
-
-   
-//insertUser   
-
 
 
    @Override
@@ -357,16 +317,5 @@ public class HcServiceImp implements IHcService {
    }
    
 
-   
-
-   
-   
-
-   
-	//랭킹
-	public List<HcDto> boardlistWithRanking(){
-		   return hcDao.boardlistWithRanking();
-
-	}
 
 }

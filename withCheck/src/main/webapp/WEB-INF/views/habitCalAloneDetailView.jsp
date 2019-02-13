@@ -97,7 +97,7 @@
 	  animation: click-wave 0.65s;
 	  background: #40e0d0;
 	  content: '';
-	  display: block;
+	  display: inline-block;
 	  position: relative;
 	  z-index: 100;
 	}

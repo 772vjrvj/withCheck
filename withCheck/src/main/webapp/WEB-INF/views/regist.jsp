@@ -102,61 +102,61 @@
 <jsp:include page="style.jsp"/>
 <body>
    <div id="container">
-	  <h1 id="title">Sign Up</h1>
+	  <h1 id="title">회원가입</h1>
       <form action="regist_after.do" method="post">
          <table id="calendartitle">
             <col width= 400px/>
             <tr>
-               <td><input width="200px;" class="form-control" class="box" placeholder="Input Id" width="300px"
+               <td><input width="200px;" class="form-control" class="box" placeholder="ID를 입력하세요" width="300px"
                   id="id" type="text" name="id" title="n" required="required"
                   autocomplete="off" />
-                  <input class="btn btn-default btn-xs" type="button" value="Id-Chk" onclick="idChk()" /> 
+                  <input class="btn btn-default btn-xs" type="button" value="ID 중복체크" onclick="idChk()" /> 
                </td>
             </tr>
             <tr>
-               <td><input class="form-control" class="box" placeholder="Input Password"
+               <td><input class="form-control" class="box" placeholder="비밀번호를 입력하세요"
                   type="password" name="password" required="required"
                   onblur="pwCheckFunction()" /></td>
             </tr>
             <tr>
                <td>
                <input class="form-control" class="box"
-                  placeholder="Password Check" type="password" name="pwCheck"
+                  placeholder="비밀번호 확인" type="password" name="pwCheck"
                   required="required" onblur="pwCheckFunction()" />
                   <div style="display: inline-block; font-size: 12px;"
                      id="pwCheckText"></div></td>
             </tr>
             <tr>
-               <td><input class="form-control" placeholder="Input Name" class="box"
+               <td><input class="form-control" placeholder="이름을 입력하세요" class="box"
                   type="text" name="name" required="required" autocomplete="off" /></td>
             </tr>
             <tr>
-               <td><input class="form-control" placeholder="Input Address" class="box"
+               <td><input class="form-control" placeholder="주소를 입력하세요" class="box"
                   type="text" name="address" required="required" autocomplete="off" /></td>
             </tr>
             <tr>
-               <td><input class="form-control" placeholder="Input Tel" class="box"
+               <td><input class="form-control" placeholder="전화번호를 입력하세요" class="box"
                   type="tel" name="phone" required="required" autocomplete="off" /></td>
             </tr>
             <tr>
-               <td><input class="form-control" placeholder="Input E-Mail"
+               <td><input class="form-control" placeholder="E-Mail을 입력하세요"
                   class="box" type="email" name="email" required="required"
                   autocomplete="off" /></td>
             </tr>
              <tr>
-               <td><input class="form-control" placeholder="Find Password Question"
+               <td><input class="form-control" placeholder="비밀번호 찾기 위한 질문을 입력하세요"
                   class="box" type="text" name="question" required="required"
                   autocomplete="off" /></td>
             </tr>
             <tr>
-               <td><input class="form-control" placeholder="Find Password Answer"
+               <td><input class="form-control" placeholder="비밀번호 찾기 위한 답변을 입력하세요"
                   class="box" type="text" name="answer" required="required"
                   autocomplete="off" /></td>
             </tr>
             <tr>
                <td colspan="2">
-                  <input class="btn btn-default btn-xs" type="submit" value="Complet"> 
-                  <input class="btn btn-default btn-xs" type="button" value="Cancel" onclick="location.href='index.jsp'"> 
+                  <input class="btn btn-default btn-xs" type="submit" value="확인"> 
+                  <input class="btn btn-default btn-xs" type="button" value="취소" onclick="location.href='index.jsp'"> 
                   &nbsp;
                </td>
             </tr>

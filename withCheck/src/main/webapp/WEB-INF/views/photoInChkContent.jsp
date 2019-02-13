@@ -92,7 +92,13 @@ h5 {
 <body>
 	<div id="container">
 		<div id="tit">
-			<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">${diffdays}</span>/${dto.term})
+			<span style="font-size: 20px;">${dto.title}</span> - ${map.ToYear1}/${map.ToMonth1}/${map.ToDate1} (<span style="color: red">
+			
+			
+			${diffdays}
+			
+			
+			</span>/${dto.term})
 		</div>
 		<br/>
 		<table>
@@ -128,12 +134,21 @@ h5 {
 	      </tr>
            		<c:choose>
 					<c:when test="${HcInChkDto.id eq loginId}">
-	      				<tr>
-	         				<td colspan="3" style="text-align: right;">
-	         					<input class="btn btn-default btn-xs" type="button"  value="확인"  onclick="location.href='habitCalWithDetail.do?id=${HcInChkDto.id}&pKey=${HcInChkDto.pKey}'"/>
-		         				<input class="btn btn-default btn-xs" type="button"  value="수정"  onclick="location.href='photoInChkCrud.do?id=${HcInChkDto.id}&inChkDate=${HcInChkDto.inChkDate}&pKey=${HcInChkDto.pKey}&crud=update'"/>
-	         				</td>
-	      				</tr>
+						<c:choose>
+							<c:when test="${dto.endList eq 'Y'}">
+							
+							</c:when>
+							<c:otherwise>
+			      				<tr>
+			         				<td colspan="3" style="text-align: right;">
+			         					<input class="btn btn-default btn-xs" type="button"  value="확인"  onclick="location.href='habitCalWithDetail.do?id=${HcInChkDto.id}&pKey=${HcInChkDto.pKey}'"/>
+				         				<input class="btn btn-default btn-xs" type="button"  value="수정"  onclick="location.href='photoInChkCrud.do?id=${HcInChkDto.id}&inChkDate=${HcInChkDto.inChkDate}&pKey=${HcInChkDto.pKey}&crud=update'"/>
+			         				</td>
+			      				</tr>							
+							</c:otherwise>
+						</c:choose>
+					
+	      				
 					</c:when>
 					<c:otherwise>
 					

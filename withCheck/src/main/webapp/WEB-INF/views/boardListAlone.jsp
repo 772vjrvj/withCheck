@@ -263,9 +263,9 @@ figure div:nth-child(3) {
 		<div style="text-align: center;">
 			<select id="select1" name="select1">
 	            <option value="ID" >ID</option>
-	            <option value="Title">Title</option>
-	            <option value="Term" >Term</option>
-	            <option value="StartDate">StartDate</option>
+	            <option value="Title">제목</option>
+	            <option value="Term" >기간</option>
+	            <option value="StartDate">시작일</option>
 			</select>
 				
 			<input type="text" id="datepicker" name="input2" style="width: 200px;" autocomplete="off" />

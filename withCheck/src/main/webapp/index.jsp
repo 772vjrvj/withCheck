@@ -77,20 +77,20 @@
             <col width="400px">
             <col width="400px">
             <tr>
-               <td><input id="id" name="id" style="width: 400px;" value="" autocomplete="off" class="form-control" type="text"  placeholder="Input Your Id"/></td>
+               <td><input id="id" name="id" style="width: 400px;" value="" autocomplete="off" class="form-control" type="text"  placeholder="ID를 입력하세요"/></td>
             </tr>
             <tr>
-               <td><input class="form-control" type="password" name="password" placeholder="Input Your Password"/></td>
+               <td><input class="form-control" type="password" name="password" placeholder="비밀번호를 입력하세요"/></td>
             </tr>
             <tr>
                <td>&nbsp</td>
             </tr>
          </table>
          <div id="butn">
-              <input class="btn btn-default btn-xs" id="login" type="submit" value="Login"/> 
-              <input class="btn btn-default btn-xs" type="button" value="Sign up" onclick="location.href='regist.do'" />
-              <input class="btn btn-default btn-xs" type="button" value="Forgot Id" onclick="location.href='findId.do'" />
-              <input class="btn btn-default btn-xs" type="button" value="Forgot Pw" onclick="location.href='findPw_identi.do'" />
+              <input class="btn btn-default btn-xs" id="login" type="submit" value="로그인"/> 
+              <input class="btn btn-default btn-xs" type="button" value="회원가입" onclick="location.href='regist.do'" />
+              <input class="btn btn-default btn-xs" type="button" value="아아디 찾기" onclick="location.href='findId.do'" />
+              <input class="btn btn-default btn-xs" type="button" value="비밀번호 찾기" onclick="location.href='findPw_identi.do'" />
          </div>
       </form>
 	</div>

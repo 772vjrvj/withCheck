@@ -121,36 +121,24 @@ public interface IHcService {
 	//V인증삭제하기
 	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto);   
 
-	
-	
-	//유저 정보 변경
+	//V랭킹
+	public List<HcDto> boardlistWithRanking();
+   	
+	//V유저 정보 변경
 	public boolean updateUser(HcLoginDto dto);
 	
-	//탈퇴하기
+	//V탈퇴하기
 	public boolean deleUser(String id);
 
-
-	//탈퇴한 아이디 리스트 지우기
+	//V탈퇴한 아이디 리스트 지우기
 	public boolean deleList(String id);
 
-
-
-	//종료일이 지난 모든 리스트들 가저오기
+	//V종료일이 지난 모든 리스트들 가저오기
 	public List<HcDto> getAllListEndY(String id);
 
-
-	   
-
-	
-   public List<HcDto> searchContentId(String searchContent);
-   public List<HcDto> searchContentTitle(String searchContent);
-   
-   
 
    public List<HcLoginDto> getAllUser();
    public boolean updateRoleUser(String id, String role,String enabled);
 
-	//랭킹
-	public List<HcDto> boardlistWithRanking();
-   
+
 }

@@ -35,6 +35,7 @@
 	    opacity: 0;
 	  }
 	}
+	
 	.option-input {
 	  -webkit-appearance: none;
 	  -moz-appearance: none;
@@ -81,7 +82,7 @@
 	  animation: click-wave 0.65s;
 	  background: #000000;
 	  content: '';
-	  display: block;
+	  display: inline-block;
 	  position: relative;
 	  z-index: 100;
 	}
@@ -110,15 +111,18 @@
 	      text-align: left;
 	      vertical-align: top;
 	   }
+	   
 	   #list{
 	   width: 564px;
 	   display: none;
 	   text-align:left;
 	   }
+	   
 	   #container{
 	   width: 800px;
 	   margin: 0 auto 0 auto;
 	   }
+	   
 	   #calendartitle {
 	      border: 1px solid #000000;
 	      border-collapse: collapse;
@@ -197,7 +201,6 @@
 			<tr><th colspan="3" style="color:#245682; text-align: center; font-size: 20px;">${dto.title}</th></tr>
 			<tr><td style="color: white">&nbsp;</td></tr>
    		</table>   
-		
 		<table id="calendartitle" border="1" style="border: 3px solid #000000;">
 			<col width="188px">
 			<col width="188px">
@@ -218,7 +221,7 @@
 	   
 		<img alt="이미지" src="${dto.photo}" >
 	   
-   		<table id="calendartitle" style="border-collapse: collapse; border: white; height: 30px;">
+		<table id="calendartitle" style="border-collapse: collapse; border: white; height: 30px;">
 			<col width="188px">
 			<col width="188px">
 			<col width="188px">
@@ -246,10 +249,7 @@
 								<c:choose>
 									<c:when test="${list.id eq loginId}">
 										<c:set var="sameValue" value="1"/>
-									</c:when>
-									<c:otherwise>
-		                           
-									</c:otherwise>   
+									</c:when> 
 								</c:choose>
 							</c:forEach>
 							
@@ -342,9 +342,7 @@
 				                </c:when>
 								<c:otherwise>
 									<p class="countview" style="color:${Util.fontColor(Cal.dayOfWeek(i,j,1), n)};">
-										<input type="button" value="${n}" onclick="location.href='photoInChk.do?
-										thisDate=${Util.substring(i)}${Util.isTwoInt(j)}${Util.isTwoInt(n)}
-										&pKey=${dto.pKey}&id=${dto.id}'" ${n>Util.substring6(map.today)? "disabled":""}>
+										<input type="button" value="${n}" onclick="location.href='photoInChkView.do?thisDate=${Util.substring(i)}${Util.isTwoInt(j)}${Util.isTwoInt(n)}&pKey=${dto.pKey}&id=${dto.id}'" ${n>Util.substring6(map.today)? "disabled":""}>
 									</p>
 									<input  class="option-input checkbox" type="checkbox" name="chk" 
 									value='${Util.substring(i)}${Util.isTwoInt(j)}${Util.isTwoInt(n)}'

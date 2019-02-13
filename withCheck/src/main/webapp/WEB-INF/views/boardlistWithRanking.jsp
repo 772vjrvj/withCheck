@@ -189,104 +189,71 @@ figure div:nth-child(3) {
 
 </head>
 <body>
-<jsp:useBean id="Cal" class="com.hk.toCheckFinal.utils.cal"/>
-	 <jsp:useBean id="Util" class="com.hk.toCheckFinal.utils.Util"/>
+	<jsp:useBean id="Cal" class="com.hk.toCheckFinal.utils.cal"/>
+	<jsp:useBean id="Util" class="com.hk.toCheckFinal.utils.Util"/>
 	 
 	<div id="container">
-		<div style=" text-align: center;"><h3>-This Month Ranking-</h3></div>
+		<div style=" text-align: center;"><h3 id="ifnull">-With Ranking-</h3></div>
 		<table style=" align-content: center;">
-
-
-        	<br/>		
-
-		
+        	<br/>
+        			
 			<c:choose>
-			<c:when test="${fn:length(list) eq 0 }">
-       			<div id="ifnull">There are no completed listings.</div>
-			</c:when>
-			<c:otherwise>
-				<c:forEach var="dto" items="${list}" varStatus="status">
-					<c:set var="per" value="0.0"/>
+				<c:when test="${fn:length(list) eq 0 }">
+       				<div id="ifnull">리스트가 없습니다.</div>
+				</c:when>
+				<c:otherwise>
+					<c:forEach var="dto" items="${list}" varStatus="status">
+						<c:set var="per" value="0.0"/>
 					
-					<c:choose>
-					<c:when test="${dto.chkCount eq 0}">
+						<c:choose>
+							<c:when test="${dto.chkCount eq 0}">
 						
-					</c:when>
-					<c:otherwise>
-						<c:set var="per" value="${(dto.chkCount/dto.term)*100}"/>
-						
-					</c:otherwise>
-					</c:choose>	
-					<c:choose>
-					<c:when test="${(status.count)%3 eq 1}">
-						<tr><td>
-							<div class="progress-fixed">
-							<img alt="이미지" src="img/Trophy-gold.png" >
-							<img alt="이미지" src="${dto.photo}" >
-							<div>${dto.id}</div>
-							<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(${dto.chkCount}/${dto.term})</div>
-					  		<figure>
-					    		<div class="progress-fixed__bar${status.count}"></div>
-					    		<div class="progress-fixed__percent${status.count}"></div>
-						    		<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
-					  		</figure>
-							</div>
+							</c:when>
+							<c:otherwise>
+								<c:set var="per" value="${(dto.chkCount/dto.term)*100}"/>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when test="${(status.count)%3 eq 1}">
+								<tr>
+							</c:when>
+						</c:choose>
+							<td>
+								<div class="progress-fixed">
+									<c:choose>
+										<c:when test="${status.count eq 1}">
+											<img alt="이미지" src="img/Trophy-gold.png" >
+										</c:when>
+										<c:when test="${status.count eq 2}">
+											<img alt="이미지" src="img/Trophy-silver.png" >
+										</c:when>
+										<c:otherwise>
+											<img alt="이미지" src="img/Trophy-bronze.png" >
+										</c:otherwise>
+									</c:choose>
+									
+									<img alt="이미지" src="${dto.photo}" >
+									
+									<div>${dto.id}</div>
+									<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(${dto.chkCount}/${dto.term})</div>
+					  				<figure>
+					    				<div class="progress-fixed__bar${status.count}"></div>
+					    				<div class="progress-fixed__percent${status.count}"></div>
+						    			<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
+					  				</figure>
+								</div>
 							<input class="bar" type="hidden"  onclick="BG.init(${per},${status.count})"/>
 							<br/>
 							<br/>
 							</td>
-					</c:when>
-					<c:when test="${(status.count)%3 eq 2||(status.count)%3 eq 3}">
-							<td>
-							<div class="progress-fixed">
-							<img alt="이미지" src="img/Trophy-silver.png" >
-							<img alt="이미지" src="${dto.photo}" >
-							<div>${dto.id}</div>
-							<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(${dto.chkCount}/${dto.term})</div>
-					  		<figure>
-					    		<div class="progress-fixed__bar${status.count}"></div>
-					    		<div class="progress-fixed__percent${status.count}"></div>
-						    		<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
-					  		</figure>
-							</div>
-							<input class="bar" type="hidden"  onclick="BG.init(${per},${status.count})"/>	
-							<br/>
-							<br/>				
-							</td>						
-					</c:when>
-					<c:when test="${(status.count)%3 eq 0}">
-							<td>
-							<div class="progress-fixed">
-							<img alt="이미지" src="img/Trophy-bronze.png" >
-							<img alt="이미지" src="${dto.photo}" >
-							<div>${dto.id}</div>
-							<div>${Util.TodayYYMMDD2(dto.stDate).ToYear1}.${Util.TodayYYMMDD2(dto.stDate).ToMonth1}.${Util.TodayYYMMDD2(dto.stDate).ToDate1}(${dto.chkCount}/${dto.term})</div>
-						  		<figure>
-						    		<div class="progress-fixed__bar${status.count}"></div>
-						    		<div class="progress-fixed__percent${status.count}"></div>
-						    		<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
-						  		</figure>
-							</div>
-							<input class="bar" type="hidden"  onclick="BG.init(${per},${status.count})"/>	
-							<br/>
-							<br/>
-							</td><tr>						
-					</c:when>
-					</c:choose>	
-				</c:forEach>						
-			</c:otherwise>
-			</c:choose>
-
-			<c:forEach var = "m" begin = "1" end = "${(3-(fn:length(list))%3)%3}">
-				<c:choose>
-				<c:when test="${m eq  (3-(fn:length(list))%3)%3}">
-					<td>&nbsp;</td></tr>
-				</c:when>
-				<c:otherwise>
-					<td>&nbsp;</td>
-				</c:otherwise>				
-				</c:choose>
-			</c:forEach>	
+						<c:choose>
+							<c:when test="${((status.count)%3 eq 0) or(status.count eq fn:length(list))}">
+								</tr>
+							</c:when>
+						</c:choose>	
+					</c:forEach>						
+				</c:otherwise>
+			</c:choose>	
 		</table>
 	</div>
 </body>

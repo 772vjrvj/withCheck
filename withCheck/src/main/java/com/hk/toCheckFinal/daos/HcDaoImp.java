@@ -189,6 +189,14 @@ public class HcDaoImp implements IHcDao {
 
    }	
 	
+	//VpKey가 같은 습관달력 구하기
+	@Override
+	public List<HcDto> getHabitCalList(String pKey) {
+	System.out.println("HcDaoImp getHabitCalList");									   
+	return sqlSession.selectList(namespace+"getHabitCalList",pKey);
+
+   }   	
+	
 	//V체크 값들 가저오기
 	@Override
 	public List<String> habitCalTakeChk(String pKey) {
@@ -373,80 +381,53 @@ public class HcDaoImp implements IHcDao {
 		return count>0?true:false;        
 	}      
 	
-	//유저 정보 변경
+	//V랭킹
+	@Override
+	public List<HcDto> boardlistWithRanking() {
+		System.out.println("HcDaoImp boardlistWithRanking");
+		List<HcDto>list=new ArrayList<HcDto>();
+		list=sqlSession.selectList(namespace+"boardlistWithRanking");
+		return list;
+	} 	
+	
+	
+	
+	//V유저 정보 변경
 	@Override
 	public boolean updateUser(HcLoginDto dto) {
+		System.out.println("HcDaoImp updateUser");		
 		int count = 0;
 		count=sqlSession.update(namespace+"updateUser", dto);
 		return count > 0 ? true : false;
 	}
 	
-	//탈퇴하기
+	//V탈퇴하기
 	@Override
 	public boolean deleUser(String id) {
+		System.out.println("HcDaoImp deleUser");				
 		int count = 0;
 		count=sqlSession.update(namespace+"deleUser", id);
 		return count > 0 ? true : false;
 	}
 	
-	//탈퇴한 아이디 리스트 지우기
+	//V탈퇴한 아이디 리스트 지우기
 	@Override
 	public boolean deleList(String id) {
+		System.out.println("HcDaoImp deleList");						
 		int count = 0;
 		count=sqlSession.update(namespace+"deleList", id);
 		return count > 0 ? true : false;
 	}	
-	
 
-	
-
-
-	//습관달력 한개 구하기
-	@Override
-	public List<HcDto> getHabitCalList(String pKey) {
-	   
-	return sqlSession.selectList(namespace+"getHabitCalList",pKey);
-
-   }   
- 	
-	//종료일이 지난 모든 리스트들 가저오기
+	//V종료일이 지난 모든 리스트들 가저오기
 	@Override
 	public List<HcDto> getAllListEndY(String id) {
+		System.out.println("HcDaoImp getAllListEndY");						
 		List<HcDto>list=new ArrayList<HcDto>();
-		System.out.println("getAllListEndY");
 		list=sqlSession.selectList(namespace+"getAllListEndY",id);
-      
 		return list;
 	}   
    
-
-
-
-
-	 
-
-
-
-   
-
-
-   
-   
-
-   @Override
-   public List<HcDto> searchContentId(String searchContent) {
-      List<HcDto>list=new ArrayList<HcDto>();
-      list=sqlSession.selectList(namespace+"searchContentId",searchContent);
-      return list;
-   }
-
-   @Override
-   public List<HcDto> searchContentTitle(String searchContent) {
-      List<HcDto>list=new ArrayList<HcDto>();
-      list=sqlSession.selectList(namespace+"searchContentTitle",searchContent);
-      return list;
-   }
-
 
    
    @Override   
@@ -469,11 +450,5 @@ public class HcDaoImp implements IHcDao {
 
    
 
-	@Override
-	public List<HcDto> boardlistWithRanking() {
-		List<HcDto>list=new ArrayList<HcDto>();
 
-		list=sqlSession.selectList(namespace+"boardlistWithRanking");
-		return list;
-	} 
 }

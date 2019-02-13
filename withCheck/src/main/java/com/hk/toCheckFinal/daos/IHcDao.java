@@ -63,6 +63,9 @@ public interface IHcDao {
 	//V습관달력 한개 구하기
 	public HcDto getHabitCalListOne(String pKey,String id);
 	
+	//VpKey가 같은 습관달력들 구하기
+	public List<HcDto> getHabitCalList(String pKey);
+
 	//V체크 값들 가저오기
 	public List<String> habitCalTakeChk(String pKey);	
 	
@@ -117,38 +120,25 @@ public interface IHcDao {
 	//V인증 삭제하기
 	public boolean deleteHcUserInChk(HcInChkDto HcInChkDto);   
 
-	
-	//유저 정보 변경
-	public boolean updateUser(HcLoginDto dto);
-
-	//탈퇴하기
-	public boolean deleUser(String id);
-
-	//탈퇴한 아이디 리스트 지우기
-	public boolean deleList(String id);
-
-
-
-	//pKey가 같은 습관달력들 구하기
-	public List<HcDto> getHabitCalList(String pKey);
-
-	//종료일이 지난 모든 리스트들 가저오기
-	public List<HcDto> getAllListEndY(String id);
-
-
-
-
-	
-	
-   public List<HcDto> searchContentId(String searchContent);
-   public List<HcDto> searchContentTitle(String searchContent);
-   
-
-   public List<HcLoginDto> getAllUser();
-   public boolean updateRoleUser(String id, String role,String enabled);
-   
- 
-	//랭킹
+	//V랭킹
 	public List<HcDto> boardlistWithRanking();
    
+	//V유저 정보 변경
+	public boolean updateUser(HcLoginDto dto);
+
+	//V탈퇴하기
+	public boolean deleUser(String id);
+
+	//V탈퇴한 아이디 리스트 지우기
+	public boolean deleList(String id);
+
+	//V종료일이 지난 모든 리스트들 가저오기
+	public List<HcDto> getAllListEndY(String id);
+
+	
+	public List<HcLoginDto> getAllUser();
+	public boolean updateRoleUser(String id, String role,String enabled);
+   
+ 
+
 }

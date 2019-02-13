@@ -251,22 +251,20 @@ public class HomeController implements ServletContextAware {
 					}else {
 						
 					}
-				}else{
-					//종료 일이 오늘날짜보다 작다는 건 지난 것이라는 이야기// 모든 유저들의 리스트 중에 기간이 지난것을 종료 시켜줌
-					if(Integer.parseInt(list.get(k).getEdDate()) < today1) {
-						list.get(k).setEndList("Y");
-						boolean isS=hcService.updateEndList(list.get(k));
-	            		if(isS==true) {
-	            			System.out.println("endList변경 성공");
-	            		}else {
-	            			System.out.println("endList변경 실패");
-	            		}
-	            	}else {
-	            		
-	            	}
-					
 				}
-            	
+				
+				//종료 일이 오늘날짜보다 작다는 건 지난 것이라는 이야기// 모든 유저들의 리스트 중에 기간이 지난것을 종료 시켜줌
+				if(Integer.parseInt(list.get(k).getEdDate()) < today1) {
+					list.get(k).setEndList("Y");
+					boolean isS=hcService.updateEndList(list.get(k));
+            		if(isS==true) {
+            			System.out.println("endList변경 성공");
+            		}else {
+            			System.out.println("endList변경 실패");
+            		}
+            	}else {
+            		
+            	}
             }
 
 			//로그인 아이디의 리스트 가저오기
@@ -484,6 +482,7 @@ public class HomeController implements ServletContextAware {
 				List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, today1+""));
 				view.addObject("list",list);
 				view.addObject("diffdays",diffdays+1);
+				
 				view.addObject("map",map);
 				view.addObject("dto",dto);
 				view.setViewName("photoInChk");
@@ -496,7 +495,12 @@ public class HomeController implements ServletContextAware {
     		List<HcDto> list = hcService.getHabitCalList(pKey);
     		int intoPer=hcService.habitCalIntoPerCount(pKey);
     		List<String> chkList=hcService.habitCalTakeChk(pKey);
-    		view.addObject("diffdays",-diffdays);
+			if(today1<stDate) {
+				view.addObject("diffdays",-diffdays);
+
+			}else {		
+				view.addObject("diffdays",dto.getTerm());
+			}
             view.addObject("dto",dto);   
             view.addObject("map",map);
             view.addObject("intoPer",intoPer);
@@ -653,6 +657,36 @@ public class HomeController implements ServletContextAware {
 			}
 	}     
 	
+	//V달력 삭제 및 취소
+	@RequestMapping(value = "/habitCalDeleteWithAll.do", method = RequestMethod.GET)
+	public String habitCalDeleteWithAll(String pKey, String id,String which, Locale locale, Model model) {
+		logger.info("habitCalDeleteWithAll {}.", locale);
+      
+		boolean isS  = hcService.habitCalDeleteAll(pKey);
+		HcLoginDto HcLoginDto=hcService.getUser(id);
+		//인증페이지 다 삭제
+		boolean isS1  = hcService.deleteHcInChkAll(pKey);   
+		System.out.println("habitCalDeleteAll:"+isS+"deleteHcInChkAll:"+isS1);
+			if(isS==true&&isS1==true){
+				
+				if(which.equals("main")) {
+					return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();		
+				}else if(which.equals("boardListWith")) {
+					return "redirect:boardListWith.do";			
+				}else {
+					model.addAttribute("msg","이동에 실패했습니다.");
+					return "error";    
+				}
+				
+			}else{
+				model.addAttribute("msg","삭제에 실패 했습니다.");
+				return "error";            
+			}
+
+	} 	
+	
+	
+	
 	
 	//V혼자 함께 선택selectform
 	@RequestMapping(value = "/selectform.do", method = RequestMethod.GET)
@@ -784,8 +818,17 @@ public class HomeController implements ServletContextAware {
 			List<HcDto> list = hcService.getHabitCalList(pKey);
 			int intoPer=hcService.habitCalIntoPerCount(pKey);
 			List<String> chkList=hcService.habitCalTakeChk(pKey);
-			view.addObject("diffdays",-diffdays);
-	        view.addObject("dto",dto);   
+			
+			if(today1<stDate) {
+				view.addObject("diffdays",-diffdays);
+
+			}else {		
+				view.addObject("diffdays",dto.getTerm());
+			}
+	        
+			
+			
+			view.addObject("dto",dto);   
 	        view.addObject("map",map);
 	        view.addObject("intoPer",intoPer);
 	        view.addObject("chkList",chkList);
@@ -794,7 +837,8 @@ public class HomeController implements ServletContextAware {
             view.setViewName("habitCalWithDetailView");
             	 
             return view;        
-		}        
+		}
+
 
 	}
 	
@@ -880,8 +924,10 @@ public class HomeController implements ServletContextAware {
 		ModelAndView view = new ModelAndView();		
 		HcDto dto = hcService.getHabitCalListOne(pKey,id);
 	    System.out.println("dto:"+dto);
-		long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
 	
+		long diffdays=Util.doDiffOfDate2(dto.getStDate(),inChkDate)+1;
+
+		
 		Map<String, Integer> map =Util.TodayYYMMDD();
 		HcInChkDto HcInChkDto = hcService.getHcUserInChk(new HcInChkDto(pKey,inChkDate ,id));
 			
@@ -1058,13 +1104,58 @@ public class HomeController implements ServletContextAware {
         
      }    
 
+	//V함께하기 진행중 전체 달력보기
+	@RequestMapping(value = "/habitCalWithDetailView2.do", method = RequestMethod.GET)
+	public ModelAndView habitCalWithDetailView2(String id, String pKey, Locale locale) throws ParseException {
+		logger.info("habitCalWithDetailView2 {}.", locale);
+		ModelAndView view = new ModelAndView();
+		
+		HcDto dto = hcService.getHabitCalListOne(pKey,id);
+        
+		long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
+		//시작일 =< 오늘날짜  =< 종료일 && 함께하기 상태인 경우
+
+    		Map<String, Integer> map =Util.DetailYYMMDD(dto);
+    		List<HcDto> list = hcService.getHabitCalList(pKey);
+    		int intoPer=hcService.habitCalIntoPerCount(pKey);
+    		List<String> chkList=hcService.habitCalTakeChk(pKey);
+    		view.addObject("diffdays",diffdays);
+            view.addObject("dto",dto);   
+            view.addObject("map",map);
+            view.addObject("intoPer",intoPer);
+            view.addObject("chkList",chkList);
+            view.addObject("list",list);//참가자들
+            
+            view.setViewName("habitCalWithDetailView2");
+            	 
+            return view;
+	}	
+	    
+	//V모든 회원들의 '함께' 하기 리스트 상세보기 로그인 사용자 보기 수정불가
+	@RequestMapping(value = "/photoInChkView.do", method = RequestMethod.GET)
+	public ModelAndView photoInChkView(String thisDate,String id, String pKey, Locale locale) throws ParseException {
+		logger.info("photoInChkView {}.", locale);
+		ModelAndView view = new ModelAndView();
+		System.out.println("thisDate:"+thisDate);
+		HcDto dto = hcService.getHabitCalListOne(pKey,id);
+        System.out.println("dto.getStDate():"+dto.getStDate());
+		long diffdays=Util.doDiffOfDate2(dto.getStDate(),thisDate)+1;
+        	System.out.println("diffdays:"+diffdays);
+        	  
+			Map<String, Integer> map= Util.TodayYYMMDD2(thisDate);
+			//인증하기 해당 날짜에 해당 목록
+			List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, thisDate));
+			view.addObject("list",list);
+			view.addObject("diffdays",diffdays);
+			view.addObject("map",map);
+			view.addObject("dto",dto);
+			view.setViewName("photoInChkView");
+        	 
+			return view;
+	}	    
     
-    
-    
-	
-	
-	
-	//현재 진행중인 리스트 평균 각각 퍼센트 구하기
+
+	//V현재 진행중인 리스트 평균 각각 퍼센트 구하기
 	@RequestMapping(value = "/totalPer.do", method = RequestMethod.GET)
 	public ModelAndView totalPer(String id, Locale locale, Model model) {
 		logger.info("전체 진행 퍼센트 {}.", locale);
@@ -1100,7 +1191,32 @@ public class HomeController implements ServletContextAware {
 		
 	   }    
 	
-	//유저정보
+	//V랭킹보기
+    @RequestMapping(value = "/boardlistWithRanking.do", method = RequestMethod.GET)
+    public ModelAndView boardlistWithRanking(Locale locale, Model model) {
+    	logger.info("boardlistWithRanking {}.", locale);
+    	ModelAndView view = new ModelAndView();
+       
+    	List<HcDto> list=hcService.boardlistWithRanking();
+    	System.out.println("list:"+list);
+    	System.out.println("listsize:"+list.size());
+    	System.out.println("today.substring(0, 6):"+today.substring(0, 6));
+      	
+      	 for (int i = 0; i < list.size(); i++) {
+      		if(i<=2){
+      			
+      		}else {
+      			list.remove(i);
+      		}
+		}
+      	 
+      	 view.addObject("list",list);
+      	 view.setViewName("boardlistWithRanking");
+
+       return view;
+    } 			
+	
+	//V유저정보
 	@RequestMapping(value = "/userinfo.do", method = RequestMethod.GET)
 	public String userinfo(String id, Locale locale, Model model) {
 		logger.info("유저정보 {}.", locale);
@@ -1110,7 +1226,7 @@ public class HomeController implements ServletContextAware {
 		return "userinfo";
 	}         
    
-	//유저 업데이트
+	//V유저 업데이트
 	@RequestMapping(value = "/updateform.do", method = RequestMethod.GET)
 	public String updateform(String id, Locale locale, Model model) {
       logger.info("유저 업데이트 {}.", locale);
@@ -1121,7 +1237,7 @@ public class HomeController implements ServletContextAware {
       return "updateform";
 	}            
 
-	//유저업데이트 후
+	//V유저업데이트 후
 	@RequestMapping(value = "/updateform_after.do", method = RequestMethod.POST)
 	public String updateform_after(HcLoginDto HcLoginDto, Locale locale) {
 		logger.info("유저업데이트 후 {}.", locale);
@@ -1137,127 +1253,30 @@ public class HomeController implements ServletContextAware {
 		}
 	}               
 	
-	//탈퇴하기
+	
+	//V탈퇴하기
 	@RequestMapping(value = "/deluser.do", method = RequestMethod.GET)
-	public String deluser(String id, Locale locale) {
+	public String deluser(String id, Model model,Locale locale) {
 		logger.info("탈퇴하기 {}.", locale);
-      
+		
+		model.addAttribute("loginId", "0");
+		model.addAttribute("loginRole", "0");
+		
 		boolean isS1= hcService.deleUser(id);
 		boolean isS2= hcService.deleList(id);
 		
-		if(isS1==true&&isS2==true){
+		System.out.println("isS1" + isS1 + "isS2" + isS2);
+		if(isS1==true){
 			System.out.println("탈퇴성공");
 			return "redirect:index.jsp";
 		}else{
 			System.out.println("탈퇴실패");
 			return "redirect:userinfo.do?id="+id;
 		}
-	}         
-   
- 
+	}         	    
+  
 
-	//Alone or With Detail페이지로 가기위해 들리는 곳
-	@RequestMapping(value = "/habitCalDetailView.do", method = RequestMethod.GET)
-	public String habitCalDetailView(String id, String pKey, Locale locale) throws ParseException {
-		logger.info("habitCalDetailView {}.", locale);
-
-		HcDto dto = hcService.getHabitCalListOne(pKey,id);
-		if(dto.getWithh().equals("N")) {
-			return "redirect:habitCalAloneDetailView.do?id="+id+"&pKey="+pKey;
-		}else {
-			return "redirect:habitCalWithDetailView2.do?id="+id+"&pKey="+pKey;
-		}
-
-	}  	
-	
-	
-	//모든 회원들의 '함께' 하기 리스트 상세보기 로그인 사용자 보기 수정불가
-	@RequestMapping(value = "/photoInChkView.do", method = RequestMethod.GET)
-	public ModelAndView photoInChkView(String thisDate,String id, String pKey, Locale locale) throws ParseException {
-		logger.info("photoInChkView {}.", locale);
-		ModelAndView view = new ModelAndView();
-		System.out.println("thisDate:"+thisDate);
-		HcDto dto = hcService.getHabitCalListOne(pKey,id);
-        System.out.println("dto.getStDate():"+dto.getStDate());
-		long diffdays=Util.doDiffOfDate2(dto.getStDate(),thisDate)+1;
-        	System.out.println("diffdays:"+diffdays);
-        	  
-			Map<String, Integer> map= Util.TodayYYMMDD2(thisDate);
-			//인증하기 해당 날짜에 해당 목록
-			List<HcInChkDto> list = hcService.getHcInChk(new HcInChkDto(pKey, thisDate));
-			view.addObject("list",list);
-			view.addObject("diffdays",diffdays);
-			view.addObject("map",map);
-			view.addObject("dto",dto);
-			view.setViewName("photoInChkView");
-        	 
-			return view;
-			 
-	}	
-	
-	
-	//함께하기 진행중 전체 달력보기
-	@RequestMapping(value = "/habitCalWithDetailView2.do", method = RequestMethod.GET)
-	public ModelAndView habitCalWithDetailView2(String id, String pKey, Locale locale) throws ParseException {
-		logger.info("habitCalWithDetailView2 {}.", locale);
-		ModelAndView view = new ModelAndView();
-		
-		HcDto dto = hcService.getHabitCalListOne(pKey,id);
-        
-		long diffdays=Util.doDiffOfDate(dto.getStDate())+1;
-		//시작일 =< 오늘날짜  =< 종료일 && 함께하기 상태인 경우
-
-    		Map<String, Integer> map =Util.DetailYYMMDD(dto);
-    		List<HcDto> list = hcService.getHabitCalList(pKey);
-    		int intoPer=hcService.habitCalIntoPerCount(pKey);
-    		List<String> chkList=hcService.habitCalTakeChk(pKey);
-    		view.addObject("diffdays",diffdays);
-            view.addObject("dto",dto);   
-            view.addObject("map",map);
-            view.addObject("intoPer",intoPer);
-            view.addObject("chkList",chkList);
-            view.addObject("list",list);//참가자들
-            
-            view.setViewName("habitCalWithDetailView2");
-            	 
-            return view;
-	}	
-	
-	
-      
-	//달력 삭제 및 취소
-	@RequestMapping(value = "/habitCalDeleteWithAll.do", method = RequestMethod.GET)
-	public String habitCalDeleteWithAll(String pKey, String id,String which, Locale locale, Model model) {
-		logger.info("habitCalDeleteWithAll {}.", locale);
-      
-		boolean isS  = hcService.habitCalDeleteAll(pKey);
-		HcLoginDto HcLoginDto=hcService.getUser(id);
-		//인증페이지 다 삭제
-		boolean isS1  = hcService.deleteHcInChkAll(pKey);   
-		System.out.println("habitCalDeleteAll:"+isS+"deleteHcInChkAll:"+isS1);
-			if(isS==true&&isS1==true){
-				
-				if(which.equals("main")) {
-					return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();		
-				}else if(which.equals("boardListWith")) {
-					return "redirect:boardListWith.do";
-				}else if(which.equals("completeList")) {
-					return "redirect:habitCalCompleteList.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();				
-				}else {
-					model.addAttribute("msg","이동에 실패했습니다.");
-					return "error";    
-				}
-				
-			}else{
-				model.addAttribute("msg","삭제에 실패 했습니다.");
-				return "error";            
-			}
-
-	} 
-	
-
-
-	//종료일이 지난 모든 리스트들 가저오기
+	//V종료일이 지난 모든 리스트들 가저오기
 	@RequestMapping(value = "/habitCalCompleteList.do", method = RequestMethod.GET)
 	public ModelAndView habitCalCompleteList(String id, Locale locale) {
 		logger.info("완료 리스트 목록 {}.", locale);
@@ -1269,46 +1288,36 @@ public class HomeController implements ServletContextAware {
 		view.setViewName("habitCalCompleteList");
 
 		return view;
-	}   
-
-
-
-
-
+	} 
 	
 	
-	
-	
-
+	//V혼자 하기 상세보기 삭제
+	@RequestMapping(value = "/habitCalDeleteEndList.do", method = RequestMethod.GET)
+	public String habitCalDeleteEndList(String pKey, String id,String which, Locale locale, Model model) {
+		logger.info("habitCalDelete {}.", locale);
       
-
-      
- 		
-		//랭킹보기
-	    @RequestMapping(value = "/boardlistWithRanking.do", method = RequestMethod.GET)
-	    public ModelAndView boardlistWithRanking(Locale locale, Model model) {
-	       logger.info("boardlistWithRanking {}.", locale);
-	       ModelAndView view = new ModelAndView();
-	       
-	      	 List<HcDto> list=hcService.boardlistWithRanking();
-	      	 System.out.println("list:"+list);
-	      	System.out.println("listsize:"+list.size());
-	      	System.out.println("today.substring(0, 6):"+today.substring(0, 6));
-	      	
-	      	 for (int i = 0; i < list.size(); i++) {
-	      		 System.out.println(i+"번쨰"+list.get(i).getEdDate().substring(0, 6));
-	      		if(list.get(i).getEdDate().substring(0, 6).equals(today.substring(0, 6))){
-	      			
-	      		}else {
-	      			list.remove(i);
-	      		}
-			}
-	      	 
-	      	 view.addObject("list",list);
-	      	 view.setViewName("boardlistWithRanking");
-
-	       return view;
-	    } 			
+		boolean isS  = hcService.habitCalDelete(pKey,id);
+		HcLoginDto HcLoginDto=hcService.getUser(id);
 		
-    
-	}
+			if(isS==true){
+				
+				if(which.equals("main")) {
+					return "redirect:main.do?id="+HcLoginDto.getId()+"&role="+HcLoginDto.getRole();		
+				}else if(which.equals("boardListWith")) {
+					return "redirect:boardListWith.do";
+				}else if(which.equals("completeList")) {
+					return "redirect:habitCalCompleteList.do?id="+HcLoginDto.getId();				
+				}else {
+					model.addAttribute("msg","이동에 실패했습니다.");
+					return "error";    
+				}
+				
+			}else{
+				model.addAttribute("msg","삭제에 실패 했습니다.");
+				return "error";            
+			}
+
+	}  
+	
+
+}
