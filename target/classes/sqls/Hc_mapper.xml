@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="com.hk.toCheckFinal">
+
+		<!--	VID체크 -->
+		<select id="idChk" parameterType="map" resultType="HcLoginDto">
+			SELECT ID
+			FROM HCLOGINDTO WHERE ID=#{id}   
+		</select>
+
+		<!--	V회원가입 -->
+		<insert id="insertUser" parameterType="HcLoginDto">
+			INSERT INTO HCLOGINDTO VALUES
+			(HCLOGINDTO_SEQ.NEXTVAL,#{id},#{name},#{password},#{address},#{phone},#{email},'Y','USER',#{question},#{answer})   
+		</insert>
+		
+		<!--	V아이디 찾기 -->
+		<select id="findId" parameterType="Map" resultType="HcLoginDto">
+			SELECT ID FROM HCLOGINDTO 
+			WHERE NAME=#{name} AND PHONE=#{phone}
+		</select>
+		
+		<!--	V비밀번호찾기 본인인증-->
+		<select id="findPw" parameterType="Map" resultType="HcLoginDto">
+			SELECT ID FROM HCLOGINDTO 
+			WHERE ID=#{id} AND PHONE=#{phone}
+		</select>
+      
+		<!--	V비밀번호찾기 아이디에 맞는 질문 출력하기-->
+		<select id="findPw_find" parameterType="String" resultType="HcLoginDto">
+			SELECT QUESTION FROM HCLOGINDTO 
+			WHERE ID=#{id} 
+		</select>
+      
+		<!--	V비밀번호 찾기 질문에 맞는 답변인지 검사해서 비밀번호 출력해주기-->
+		<select id="findPw_After" parameterType="Map" resultType="HcLoginDto">
+			SELECT PASSWORD FROM HCLOGINDTO 
+			WHERE QUESTION=#{question} AND ANSWER=#{answer} 
+		</select> 
+		
+		<!--	V로그인 -->
+		<select id="getLogin" parameterType="Map" resultType="HcLoginDto">
+			SELECT ID, PASSWORD, NAME, ADDRESS, PHONE, EMAIL, ENABLED, ROLE
+			FROM HCLOGINDTO WHERE ID=#{id} AND PASSWORD=#{password} AND ENABLED = 'Y'   
+		</select>	
+
+		<!--	V유저 정보 얻기 -->
+		<select id="getUser" parameterType="String" resultType="HcLoginDto">
+			SELECT SEQ, ID, NAME, ADDRESS, PHONE, EMAIL, ENABLED, ROLE, QUESTION, ANSWER
+			FROM HCLOGINDTO WHERE ID=#{id} AND ENABLED='Y'
+		</select> 
+
+		<!--	V기간이 종료되지 않은 모든 유저들의 리스트  -->
+		<select id="getAllListEvery" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE ENDLIST='N' AND HCDELETE='N'
+		</select>
+
+		<!--	V리스트 종료(삭제아님 날짜가 지난 리스트 종료) -->
+		<update id="updateEndList" parameterType="HcDto" >
+		UPDATE HCDTO SET ENDLIST=#{endList} WHERE PKEY=#{pKey}
+		</update>  
+		
+		<!--	V함꼐하기 달력 갯수 세기(참여한 사람수)  -->
+        <select id="habitCalIntoPerCount" resultType="Integer" parameterType="String">
+           SELECT COUNT(*) FROM HCDTO 
+           WHERE PKEY=#{pKey}
+        </select>   		
+		
+		<!--	V습관달력 전부 삭제 -->
+		<delete id="habitCalDeleteAll" parameterType="String" >
+		DELETE HCDTO
+		WHERE PKEY=#{pKey}
+		</delete>
+
+		<!--	V인증 페이지들 모두 삭제 -->
+		<delete id="deleteHcInChkAll" parameterType="String" >
+		DELETE 
+		FROM HCINCHKDTO WHERE PKEY=#{pKey}
+		</delete>
+
+		<!--	V로그인한 유저 한명의 종료되지 않은 리스트 -->
+		<select id="getAllList" parameterType="String" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE ID=#{id} AND ENDLIST='N' AND HCDELETE='N' ORDER BY SORT DESC
+		</select>    
+
+		<!--   V습관달력 만들기 값 입력 habitCalInsert -->
+		<insert id="habitCalInsert" parameterType="HcDto">
+        INSERT INTO HCDTO
+        VALUES (#{pKey},#{id},#{title},#{content},#{stDate},#{edDate},#{term},SYSDATE,'N',#{calWith},#{progress},#{withh},#{recruit},#{photo},#{host},'N','0','1')
+		</insert>
+
+		<!--	V함께하기를 만들면 각 날짜의 아이디의 인증 페이지 필요 insertHcInChk -->
+		<insert id="insertHcInChk" parameterType="HcInChkDto">
+		INSERT INTO HCINCHKDTO
+		VALUES (#{pKey},#{id},#{title},#{inChkDate},'','','','','')
+		<!--       VALUES (#{pKey},#{id},#{title},#{inChkDate},#{inChkPhoto},#{inChkTitle},#{inChkContent},#{inChkTime},#{inChkPhoto2}) -->
+		</insert>
+
+		<!--	Vsort업데이트 방금 본걸 main에서 맨 앞화면으로 보려고 -->
+		<update id="updateSort" parameterType="HcDto" >
+		UPDATE HCDTO SET SORT=#{sort} WHERE PKEY=#{pKey}
+		</update>
+
+		<!--	V습관달력 한개 구하기 -->
+		<select id="getHabitCalListOne" parameterType="Map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE PKEY=#{pKey} AND ID=#{id}
+		</select>  
+		
+		<!--	VpKey가 같은 습관달력들 구하기 -->
+		<select id="getHabitCalList" parameterType="String" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE PKEY=#{pKey}
+   		</select>
+		
+		<!--	V체크 값 가저오기 habitCalTakeChk -->
+		<select id="habitCalTakeChk" resultType="String" parameterType="String">
+		SELECT CHK
+		FROM HCCHKDTO
+		WHERE PKEY=#{pKey}   
+		</select>
+
+		<!--	V습관달력 체크들 삭제 -->
+		<delete id="habitCalChkDelete" parameterType="Map" >
+		DELETE HCCHKDTO
+		WHERE PKEY=#{pKey} AND CHK=#{chk}
+		</delete>
+		
+		<!--	V체크 갯수 세기 habitCalChkCount -->
+        <select id="habitCalChkCount" resultType="Integer" parameterType="String">
+		SELECT COUNT(*) FROM HCCHKDTO 
+		WHERE PKEY=#{pKey}
+        </select> 
+
+		<!--	V체크 갯수 업데이트 -->
+		<update id="updateChkCount" parameterType="HcDto" >
+		UPDATE HCDTO SET CHKCOUNT=#{chkCount} WHERE PKEY=#{pKey}
+		</update>
+
+		<!--	V체크 값 입력 habitCalInsertChk -->
+		<insert id="habitCalInsertChk" parameterType="HcChkDto">
+		INSERT INTO HCCHKDTO (PKEY,CHK)
+		SELECT #{pKey},#{chk} FROM DUAL
+		WHERE NOT EXISTS(SELECT * FROM HCCHKDTO  WHERE PKEY=#{pKey} AND CHK=#{chk})     
+		</insert>
+
+		<!--	V혼자 하기에서 공개 비공개 여부 설정 -->
+		<update id="updateCalWith" parameterType="HcDto" >
+		UPDATE HCDTO SET CALWITH=#{calWith} WHERE PKEY=#{pKey}
+		</update>
+
+		<!--	V해당 아이디 습관달력 삭제 -->
+		<delete id="habitCalDelete" parameterType="Map" >
+		DELETE HCDTO
+		WHERE PKEY=#{pKey} AND ID=#{id}
+		</delete>
+
+		<!--	V해당 아이디 인증 페이지들 모두 삭제 -->
+		<delete id="deleteHcInChk" parameterType="Map" >
+		DELETE 
+		FROM HCINCHKDTO WHERE PKEY=#{pKey} AND ID=#{id}
+		</delete>
+      	
+		<!--	V모든 회원들의 '혼자' 하기 리스트 보기  -->
+		<select id="getAllHcListAlone" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE WITHH ='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
+
+		<!--	V모든 회원들의 '함께' 하기 리스트 보기  -->
+		<select id="getAllHcListWith" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE WITHH ='Y' AND ENDLIST='N' AND NOT HOST='N'  ORDER BY REGDATE DESC
+		</select>
+
+		<!--	V아이디 검색 -->
+		<select id="getSearchID" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE ID LIKE '%'||#{id}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
+	
+		<!--	V제목 검색 -->
+		<select id="getSearchTitle" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE TITLE LIKE '%'||#{title}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
+
+		<!--	V기간 검색 -->
+		<select id="getSearchTerm" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE TERM LIKE '%'||#{term}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select> 
+      
+		<!--	V시작일 검색 -->
+		<select id="getSearchStartDate" parameterType="map" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE STDATE LIKE '%'||#{stDate}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
+		</select>  
+
+		<!--	V해당일 인증해야 하는 것들 다 가지고 오기 -->
+		<select id="getHcInChk" parameterType="Map" resultType="HcInChkDto">
+		SELECT PKEY, ID, TITLE, INCHKDATE, INCHKPHOTO, INCHKTITLE, INCHKCONTENT, INCHKTIME, INCHKPHOTO2
+		FROM HCINCHKDTO WHERE PKEY=#{pKey} AND INCHKDATE=#{inChkDate}   
+		</select>   
+
+		<!--	V인증값 가저오기 -->
+		<select id="getHcUserInChk" parameterType="Map" resultType="HcInChkDto">
+		SELECT PKEY, ID, TITLE, INCHKDATE, INCHKPHOTO, INCHKTITLE, INCHKCONTENT, INCHKTIME, INCHKPHOTO2
+		FROM HCINCHKDTO WHERE PKEY=#{pKey} AND INCHKDATE=#{inChkDate} AND Id=#{id}
+		</select>     
+
+		<!--	V인증 사진 올리기 -->
+		<update id="updateHcInChk" parameterType="HcInChkDto">
+		UPDATE HCINCHKDTO SET INCHKTITLE=#{inChkTitle}, INCHKCONTENT=#{inChkContent}, INCHKPHOTO=#{inChkPhoto, jdbcType=VARCHAR}, INCHKPHOTO2=#{inChkPhoto2, jdbcType=VARCHAR}, INCHKTIME=#{inChkTime}
+ 		WHERE Id=#{id} AND PKEY=#{pKey} AND INCHKDATE=#{inChkDate}
+		</update> 
+		
+		<!--	V인증 삭제하기 -->
+		<update id="deleteHcUserInChk" parameterType="HcInChkDto">
+		UPDATE HCINCHKDTO SET INCHKTITLE=null, INCHKCONTENT=null, INCHKPHOTO=null, INCHKTIME=null ,INCHKPHOTO2=null
+		WHERE PKEY=#{pKey} AND INCHKDATE=#{inChkDate} AND Id=#{id}
+		</update>
+		
+		<!--	V랭킹  -->
+		<select id="boardlistWithRanking" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE WITHH ='Y' AND ENDLIST='N' AND NOT HOST='N' ORDER BY CHKCOUNT DESC
+		</select>
+
+	    <!--		V유저 정보 변경 -->
+	    <update id="updateUser" parameterType="HcLoginDto">
+	    UPDATE HCLOGINDTO SET ADDRESS=#{address}, PHONE=#{phone}, EMAIL=#{email}, QUESTION=#{question}, ANSWER=#{answer}
+	    WHERE Id=#{id}
+	    </update>  
+
+		<!--		V탈퇴하기 -->
+		<update id="deleUser" parameterType="String">
+		UPDATE HCLOGINDTO SET ENABLED='N'
+		WHERE ID=#{id}
+		</update>
+     
+		<!-- 		V탈퇴한 회원 모든 리스트 비활성화 -->
+		<update id="deleList" parameterType="String">
+		UPDATE HCDTO SET HCDELETE='Y'
+		WHERE ID=#{id}
+		</update>
+
+		<!--		V종료일이 지난 모든 리스트들 가저오기 -->
+		<select id="getAllListEndY" parameterType="String" resultType="HcDto">
+		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+		FROM HCDTO WHERE ID=#{id} AND ENDLIST='Y'
+		</select>
+
+
+<!-- insertUser -->
+
+		<select id="getAllUser" resultType="HcLoginDto">
+		SELECT SEQ, ID, NAME, ADDRESS, PHONE, EMAIL, ENABLED, ROLE
+		FROM HCLOGINDTO ORDER BY NAME   
+		</select>
+		
+		<update id="updateRoleUser" parameterType="Map">
+		UPDATE HCLOGINDTO SET ROLE=#{role}, ENABLED=#{enabled} WHERE ID=#{id}      
+		</update>
+
+    </mapper>

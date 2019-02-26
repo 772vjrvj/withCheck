@@ -49,38 +49,19 @@
 		<property name="dataSource" ref="datasource"/>
 	</bean>
 
+	<tx:advice transaction-manager="transactionManager" id="txAdvice">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
 	
-<!-- 1방법 @transactional을 선언해서 사용 -->
-<!-- tx문법 위치 설정만 잘해주면 알아서 찾아서 해주겠다. Namespaces에서 설정 tx클릭 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.hk.toCheckFinal.service..*(..))" id="txPointcut"/>
+		<aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice"/>
+	</aop:config>
 
 
-<!-- 2방법 -->
-<!-- 	<tx:advice transaction-manager="transactionManager" id="txAdvice"> -->
-<!-- 		<tx:attributes> -->
-<!-- 			<tx:method name="*Board" propagation="REQUIRED" -->
-<!-- 										rollback-for="Exception"/> -->
-<!-- 		</tx:attributes> -->
-<!-- 	</tx:advice> -->
-<!--  	namespace에서 aop --> 
-<!-- 	<aop:config> -->
-<!-- 	위치를 알려줘야해 어느 시점일지 servic--> 
-<!-- 		<aop:pointcut expression="execution(* com.Hc.service.HcServiceImp.*.*(..))" id="serviceTransaction"/> -->
-<!-- 		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceTransaction"/> -->
-<!-- 	</aop:config> -->
-
-<!-- 	<bean class="com.hk.toCheckFinal.service.HcServiceImp" id="HcServiceImp"></bean> -->
 
 
-	
-	
-<!-- 	class SqlSessionFactoryBean{ -->
-<!-- 		public DataSource dataSource; -->
-		
-<!-- 		public DataSource setDataSource(DataSource datasource){ -->
-<!-- 			this.dataSource=datasource; -->
-<!-- 		} -->
-<!-- 	} -->
-<!-- ref가 참조 value에 위에 id datasource의 property를 넣음 -->
-
-	
 </beans>

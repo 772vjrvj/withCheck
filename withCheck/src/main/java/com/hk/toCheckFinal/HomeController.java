@@ -11,7 +11,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,7 +190,7 @@ public class HomeController implements ServletContextAware {
     
 	//V로그인
 	@RequestMapping(value = "/login_after.do", method = RequestMethod.POST)
-	public String login_after(HcLoginDto dto, Locale locale, Model model) {
+	public String login_after(HcLoginDto dto, Locale locale, Model model)  {
 		logger.info("로그인 진행중 {}.", locale);
 		System.out.println(dto);
 
@@ -198,7 +201,7 @@ public class HomeController implements ServletContextAware {
 			if(HcLoginDto.getEnabled().equals("Y")){
 				model.addAttribute("loginId", HcLoginDto.getId());
 				model.addAttribute("loginRole", HcLoginDto.getRole());
-            
+
 				return "redirect:main.do?id="+dto.getId()+"&role="+HcLoginDto.getRole();
 
 			}else{
@@ -218,7 +221,6 @@ public class HomeController implements ServletContextAware {
 		logger.info("로그아웃 {}.", locale);
 		model.addAttribute("loginId", "0");
 		model.addAttribute("loginRole", "0");
-
 		return "logout";
 	}  	
 
