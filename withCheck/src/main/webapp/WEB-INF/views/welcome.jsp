@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>Welcome</title>
+<title>Welcome1</title>
 <jsp:include page="style.jsp"/>
 <style type="text/css">
 	#container{
