@@ -91,12 +91,27 @@ public interface IHcService {
 	//V해당 아이디 인증 페이지들 모두 삭제
 	public boolean deleteHcInChk(String pKey,String id); 
 		
+	
+	
+	
+	
+	
+	
 	//V모든 회원들의 '혼자' 하기 리스트 보기
 	public List<HcDto> getAllHcListAlone();
 	
 	//V모든 회원들의 '함께' 하기 리스트 보기
 	public List<HcDto> getAllHcListWith();	
 		
+	public List<HcDto> listCriteriaAlone(int PAGESTART, int PERPAGENUM);
+	
+	public List<HcDto> listCriteriaWith(int PAGESTART, int PERPAGENUM);
+		
+	
+	
+	
+	
+	
 	//V아이디 검색
 	public List<HcDto> getSearchID(String searchId, String withh);
    

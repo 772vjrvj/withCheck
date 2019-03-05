@@ -34,6 +34,7 @@ import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
 import com.hk.toCheckFinal.dtos.HcInChkDto;
 import com.hk.toCheckFinal.dtos.HcLoginDto;
+import com.hk.toCheckFinal.dtos.HcPageMaker;
 import com.hk.toCheckFinal.service.IHcService;
 import com.hk.toCheckFinal.utils.Util;
 
@@ -710,18 +711,12 @@ public class HomeController implements ServletContextAware {
       		System.out.println(list1.get(i));
       	 }
       	 
- 		
- 		model.addAttribute("list", service.listCriteria(cri));  // 게시판의 글 리스트
+
  		HcPageMaker pageMaker = new HcPageMaker();
  		pageMaker.setCri(cri);
- 		pageMaker.setTotalCount(service.listCountCriteria(cri));
- 		
- 		model.addAttribute("pageMaker", pageMaker);  // 게시판 하단의 페이징 관련, 이전페이지, 페이지 링크 , 다음 페이지
- 		    	 
-      	 
-      	 
-      	 
-      	 
+ 		pageMaker.setTotalCount(list1.size());
+ 
+     	 view.addObject("pageMaker", pageMaker);      	 
       	 view.addObject("list1",list1);
       	 view.setViewName("boardListAlone");
 

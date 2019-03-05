@@ -94,7 +94,7 @@
 	.option-input:checked::after {
 /* 	  -webkit-animation: click-wave 0.65s; */
 /* 	  -moz-animation: click-wave 0.65s; */
-	  animation: click-wave 0.65s;
+/* 	  animation: click-wave 0.65s; */
 	  background: #40e0d0;
 	  content: '';
 	  display: inline-block;

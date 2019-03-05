@@ -73,7 +73,7 @@
 	.option-input:checked::after {
 /* 	  -webkit-animation: click-wave 0.65s; */
 /* 	  -moz-animation: click-wave 0.65s; */
- 	  animation: click-wave 0.65s; 
+/*  	  animation: click-wave 0.65s;  */
 	  background: black;
 	  content: '';
 	  display: inline-block;

@@ -204,6 +204,7 @@ public class HcServiceImp implements IHcService {
 		return hcDao.deleteHcInChk(pKey,id);
 	}	
 
+	
 	//V모든 회원들의 '혼자' 하기 리스트 보기
 	@Override
 		public List<HcDto> getAllHcListAlone() {
@@ -217,6 +218,25 @@ public class HcServiceImp implements IHcService {
     	System.out.println("HcServiceImp getAllHcListWith");						      						    															
 		return hcDao.getAllHcListWith();
 	}
+	
+	public List<HcDto> listCriteriaAlone(int PAGESTART, int PERPAGENUM){
+    	System.out.println("HcServiceImp listCriteriaAlone");						      						    															
+		return hcDao.listCriteriaAlone(PAGESTART, PERPAGENUM);		
+	};
+	
+	public List<HcDto> listCriteriaWith(int PAGESTART, int PERPAGENUM){
+    	System.out.println("HcServiceImp listCriteriaWith");						      						    															
+		return hcDao.listCriteriaWith(PAGESTART, PERPAGENUM);			
+		};
+		
+		
+	
+	
+	
+	
+	
+	
+	
 	
 	//V아이디 검색
 	public List<HcDto> getSearchID(String searchId, String withh){

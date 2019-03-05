@@ -215,7 +215,7 @@ function loadLiquidGauge(id, value, color, animateTime, waveHeight) {
                  <figure>
                    <div class="progress-fixed__bar${status.index}"></div>
                    <div class="progress-fixed__percent${status.index}"></div>
-                   <div class="pertitle"><a href="habitCalDetail.do?pKey=${dto.pKey}&id=${dto.id}&withh="${dto.withh}>&nbsp;${dto.title}</a></div>   
+                   <div class="pertitle"><a href="habitCalDetail.do?pKey=${dto.pKey}&id=${dto.id}&withh=${dto.withh}">&nbsp;${dto.title}</a></div>   
                  </figure>
             </div>
             <input class="bar" type="hidden"  onclick="BG.init(${per},${status.index})"/>

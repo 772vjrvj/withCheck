@@ -281,6 +281,14 @@ public class HcDaoImp implements IHcDao {
 		return count > 0 ? true : false;
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
 	//V모든 회원들의 '혼자' 하기 리스트 보기
 	@Override
 	public List<HcDto> getAllHcListAlone() {
@@ -300,6 +308,34 @@ public class HcDaoImp implements IHcDao {
 		list=sqlSession.selectList(namespace+"getAllHcListWith");
 		return list;
 	}   	
+	
+	
+	public List<HcDto> listCriteriaAlone(int PAGESTART, int PERPAGENUM){
+		System.out.println("listCriteriaAlone");																				
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		List<HcDto>list=new ArrayList<HcDto>();
+
+		map.put( "PAGESTART", PAGESTART );
+		map.put( "PERPAGENUM", PERPAGENUM );
+		list=sqlSession.selectList(namespace+"listCriteriaAlone", map);
+		return list;		
+	};
+	
+	public List<HcDto> listCriteriaWith(int PAGESTART, int PERPAGENUM){
+		System.out.println("listCriteriaAlone");																				
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		List<HcDto>list=new ArrayList<HcDto>();
+
+		map.put( "PAGESTART", PAGESTART );
+		map.put( "PERPAGENUM", PERPAGENUM );
+		list=sqlSession.selectList(namespace+"listCriteriaWith", map);
+		return list;		
+	};
+	
+	
+	
+	
+	
 	
 	//V아이디 검색
 	@Override
