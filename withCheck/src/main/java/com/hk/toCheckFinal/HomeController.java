@@ -30,6 +30,7 @@ import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
 import com.hk.toCheckFinal.dtos.HcInChkDto;
 import com.hk.toCheckFinal.dtos.HcLoginDto;
@@ -700,8 +701,8 @@ public class HomeController implements ServletContextAware {
 	
 	//V모든 회원들의 '혼자' 하기 리스트 보기
 	@RequestMapping(value = "/boardListAlone.do", method = RequestMethod.GET)
-	public ModelAndView boardlist(Locale locale, Model model) {
-		logger.info("혼자하기 목록 {}.", locale);
+	public ModelAndView boardlist(Locale locale,HcCriteria cri) {
+		logger.info("혼자하기 목록 {}."+cri.toString(), locale);
 		ModelAndView view = new ModelAndView();
        
       	 List<HcDto> list1=hcService.getAllHcListAlone(); 
@@ -709,11 +710,27 @@ public class HomeController implements ServletContextAware {
       		System.out.println(list1.get(i));
       	 }
       	 
+ 		
+ 		model.addAttribute("list", service.listCriteria(cri));  // 게시판의 글 리스트
+ 		HcPageMaker pageMaker = new HcPageMaker();
+ 		pageMaker.setCri(cri);
+ 		pageMaker.setTotalCount(service.listCountCriteria(cri));
+ 		
+ 		model.addAttribute("pageMaker", pageMaker);  // 게시판 하단의 페이징 관련, 이전페이지, 페이지 링크 , 다음 페이지
+ 		    	 
+      	 
+      	 
+      	 
+      	 
       	 view.addObject("list1",list1);
       	 view.setViewName("boardListAlone");
 
        return view;
     }   	
+	
+	
+
+	
 	
 	//V모든 회원들의 '함께' 하기 리스트 보기
     @RequestMapping(value = "/boardListWith.do", method = RequestMethod.GET)
@@ -727,6 +744,15 @@ public class HomeController implements ServletContextAware {
 
        return view;
     } 	
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 	//V검색하기
 	@RequestMapping(value = "/search1.do", method = RequestMethod.GET)
@@ -1319,7 +1345,11 @@ public class HomeController implements ServletContextAware {
 				return "error";            
 			}
 
-	}  
+	}
+	
+	
+	
+
 	
 
 }
