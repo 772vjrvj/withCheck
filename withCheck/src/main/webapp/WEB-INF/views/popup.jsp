@@ -109,18 +109,18 @@
                                            
          var pageStartNum = dataPerPage*(currentPage-1)+1;
          var pageEndNum = currentPage*dataPerPage;
-         $("tbody").empty()
-         var $tr;
+         $("tbody").empty();
+         var $tr="";
 
          for(var i = pageStartNum; i <=pageEndNum; i++){
         	 
         	 if(i%5 == 1){
-        		 $tr=$('<tr>').append($('<td>').html("<input type=\'image\'  src=\'icon/Shape "+ i+".png\'"  + "onclick=\'ff(icon/Shape"+ i.png+")\'>"));
+        		 $tr=$('<tr>').append($('<td>').html("<input type='image'  src=\'icon/Shape "+ i+".png\' onclick=\"ff(\'icon/Shape " + i+".png\')\">"));
         	 }else if(i%5 == 0 ||i==pageEndNum){
-        		 $tr.append($('<td>').html("<input type=\'image\'   src=\'icon/Shape "+ i+".png\'" +  "onclick=\'ff(icon/Shape"+ i.png+")\'>")).appendTo('tbody');
+        		 $tr.append($('<td>').html("<input type=\'image\'   src=\'icon/Shape "+ i+".png\'" +  "onclick=\"ff(\'icon/Shape "+ i+".png\')\">")).appendTo('tbody');
 
         	 }else{
-        		 $tr.append($('<td>').html("<input type=\'image\'   src=\'icon/Shape "+ i+".png\'" +  "onclick=\'ff(icon/Shape"+ i.png+")\'>"));
+        		 $tr.append($('<td>').html("<input type=\'image\'   src=\'icon/Shape "+ i+".png\'" +  "onclick=\"ff(\'icon/Shape "+ i+".png\')\">"));
         	 }
 
          }
