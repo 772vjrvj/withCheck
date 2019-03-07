@@ -3,6 +3,7 @@ package com.hk.toCheckFinal.service;
 import java.util.List;
 
 import com.hk.toCheckFinal.dtos.HcChkDto;
+import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
 import com.hk.toCheckFinal.dtos.HcInChkDto;
 import com.hk.toCheckFinal.dtos.HcLoginDto;
@@ -103,9 +104,9 @@ public interface IHcService {
 	//V모든 회원들의 '함께' 하기 리스트 보기
 	public List<HcDto> getAllHcListWith();	
 		
-	public List<HcDto> listCriteriaAlone(int PAGESTART, int PERPAGENUM);
+	public List<HcDto> listCriteriaAlone(HcCriteria cri);
 	
-	public List<HcDto> listCriteriaWith(int PAGESTART, int PERPAGENUM);
+	public List<HcDto> listCriteriaWith(HcCriteria cri);
 		
 	
 	

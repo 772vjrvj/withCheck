@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hk.toCheckFinal.dtos.HcChkDto;
+import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
 import com.hk.toCheckFinal.dtos.HcInChkDto;
 import com.hk.toCheckFinal.dtos.HcLoginDto;
@@ -310,25 +311,19 @@ public class HcDaoImp implements IHcDao {
 	}   	
 	
 	
-	public List<HcDto> listCriteriaAlone(int PAGESTART, int PERPAGENUM){
+	public List<HcDto> listCriteriaAlone(HcCriteria cri){
 		System.out.println("listCriteriaAlone");																				
-		Map<String, Integer> map = new HashMap<String, Integer>();
 		List<HcDto>list=new ArrayList<HcDto>();
 
-		map.put( "PAGESTART", PAGESTART );
-		map.put( "PERPAGENUM", PERPAGENUM );
-		list=sqlSession.selectList(namespace+"listCriteriaAlone", map);
+		list=sqlSession.selectList(namespace+"listCriteriaAlone", cri);
 		return list;		
 	};
 	
-	public List<HcDto> listCriteriaWith(int PAGESTART, int PERPAGENUM){
-		System.out.println("listCriteriaAlone");																				
-		Map<String, Integer> map = new HashMap<String, Integer>();
+	public List<HcDto> listCriteriaWith(HcCriteria cri){
+		System.out.println("listCriteriaWith");																				
 		List<HcDto>list=new ArrayList<HcDto>();
 
-		map.put( "PAGESTART", PAGESTART );
-		map.put( "PERPAGENUM", PERPAGENUM );
-		list=sqlSession.selectList(namespace+"listCriteriaWith", map);
+		list=sqlSession.selectList(namespace+"listCriteriaWith", cri);
 		return list;		
 	};
 	

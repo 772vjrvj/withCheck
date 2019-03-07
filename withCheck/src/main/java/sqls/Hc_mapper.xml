@@ -184,21 +184,33 @@
 		</select>
 		
 		
-		<select id="listCriteriaWith" resultType="HcDto" parameterType="map" >
-		<![CDATA[
+		<select id="listCriteriaWith" resultType="HcDto" parameterType="HcCriteria" >
+		
 		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
 		FROM HCDTO 
-		WHERE WITHH ='Y' AND ENDLIST='N' AND NOT HOST='N'  ORDER BY REGDATE DESC
-		LIMIT #{PAGESTART}, #{PERPAGENUM}
-		]]>
+		WHERE WITHH ='Y' AND ENDLIST='N' AND NOT HOST='N'  
+		
+		ORDER BY REGDATE DESC
+		LIMIT #{pageStart}, #{perPageNum}
+		
 		</select>
 
-		<select id="listCriteriaAlone" resultType="HcDto" parameterType="map" >
+
+
+		<select id="listCriteriaAlone" resultType="HcDto" parameterType="HcCriteria" >
 		<![CDATA[
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCDTO 
-		WHERE WITHH ='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-		LIMIT #{PAGESTART}, #{PERPAGENUM}
+		    SELECT B.rnum, B.PKEY, B.ID, B.TITLE, B.CONTENT, B.STDATE, B.EDDATE, B.TERM, B.REGDATE, B.ENDLIST, B.CALWITH, B.WITHH, B.PROGRESS, B.RECRUIT, B.PHOTO, B.HOST, B.HCDELETE, B.CHKCOUNT, B.SORT        
+            from(
+                 SELECT rownum as rnum, A.PKEY, A.ID, A.TITLE, A.CONTENT, A.STDATE, A.EDDATE, A.TERM, A.REGDATE, A.ENDLIST, A.CALWITH, A.WITHH, A.PROGRESS, A.RECRUIT, A.PHOTO, A.HOST, A.HCDELETE, A.CHKCOUNT, A.SORT
+                 from (
+                      SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+                      FROM HCDTO 
+                      WHERE WITHH ='N' AND CALWITH ='Y' AND ENDLIST='N'
+                      ORDER BY REGDATE DESC      
+                      ) A
+                 where rownum <=#{pageEnd} 
+                ) B
+            where B.rnum >= #{pageStart}
 		]]>
 		</select>
 		

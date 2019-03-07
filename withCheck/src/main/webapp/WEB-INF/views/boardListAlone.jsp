@@ -67,6 +67,16 @@ $(function(){
 
 </script>
 <script type="text/javascript">
+function page(idx){
+	var page = idx;
+	var perPageNum = $("#select2 option:selected").val();
+	location.href="${pageContext.request.contextPath}/boardListAlone.do?page="+page+"&perPageNum="+perPageNum;
+	
+}
+
+
+
+
 function search1(){
 	
 	if($("input[name=input2]").val()==null||$("input[name=input2]").val()==""){
@@ -123,7 +133,14 @@ BG.init = function(per,i) {
 //TRIGGER INIT
 $(function() {
 	$(".bar").trigger("click");
-
+	
+	$("#select2").val("${cri.perPageNum}");
+	
+	$("#select2").change(function(){
+		var idx=1
+		page(idx);
+	});
+	
 });
 
 </script>
@@ -276,11 +293,11 @@ figure div:nth-child(3) {
         
 		<table style=" align-content: center;">
 			<c:choose>
-				<c:when test="${fn:length(list1) eq 0 }">
+				<c:when test="${fn:length(list2) eq 0 }">
 	       			<div id="ifnull">검색 결과 없음.</div>
 				</c:when>
 				<c:otherwise>
-					<c:forEach var="dto" items="${list1}" varStatus="status">
+					<c:forEach var="dto" items="${list2}" varStatus="status">
 						<c:set var="per" value="0.0"/>
 						
 						<c:choose>
@@ -318,7 +335,7 @@ figure div:nth-child(3) {
 						</td>
 						
 						<c:choose>
-							<c:when test="${((status.count)%4 eq 0) or (status.count eq fn:length(list1))}">
+							<c:when test="${((status.count)%4 eq 0) or (status.count eq fn:length(list2))}">
 								<tr>
 							</c:when>
 						</c:choose>
@@ -326,6 +343,35 @@ figure div:nth-child(3) {
 				</c:otherwise>
 			</c:choose>	
 		</table>
+		
+		
+		<div style="text-align: center ; font-size: 25px;">
+			<c:if test="${pageMaker.prev}">
+				<a style="text-decoration: none;" href="javascript:page(${pageMaker.startPage-1})">◀</a>
+			</c:if>
+			<c:forEach  begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+				<c:choose>
+					<c:when test="${cri.page eq idx}">
+						<a style="text-decoration: none; color: red"  href="javascript:page(${idx})">${idx}</a>
+					</c:when>
+					<c:otherwise>
+						<a style="text-decoration: none;" href="javascript:page(${idx})">${idx}</a>					
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+			<c:if test="${pageMaker.next}">
+				<a style="text-decoration: none;" href="javascript:page(${pageMaker.endPage+1})">▶</a>
+			</c:if>
+		</div>
+		
+		<div style="text-align: center ;">
+			<select id="select2" name="perPageNum">
+	            <option value="2" >2</option>
+	            <option value="4" >4</option>
+	            <option value="8">8</option>
+			</select>
+		</div>
+		
 	</div>
 </body>
 <jsp:include page="foot.jsp"/>

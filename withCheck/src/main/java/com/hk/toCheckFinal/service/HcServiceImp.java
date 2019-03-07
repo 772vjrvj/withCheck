@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.hk.toCheckFinal.daos.IHcDao;
 import com.hk.toCheckFinal.dtos.HcChkDto;
+import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
 import com.hk.toCheckFinal.dtos.HcInChkDto;
 import com.hk.toCheckFinal.dtos.HcLoginDto;
@@ -219,14 +220,14 @@ public class HcServiceImp implements IHcService {
 		return hcDao.getAllHcListWith();
 	}
 	
-	public List<HcDto> listCriteriaAlone(int PAGESTART, int PERPAGENUM){
+	public List<HcDto> listCriteriaAlone(HcCriteria cri){
     	System.out.println("HcServiceImp listCriteriaAlone");						      						    															
-		return hcDao.listCriteriaAlone(PAGESTART, PERPAGENUM);		
+		return hcDao.listCriteriaAlone(cri);		
 	};
 	
-	public List<HcDto> listCriteriaWith(int PAGESTART, int PERPAGENUM){
+	public List<HcDto> listCriteriaWith(HcCriteria cri){
     	System.out.println("HcServiceImp listCriteriaWith");						      						    															
-		return hcDao.listCriteriaWith(PAGESTART, PERPAGENUM);			
+		return hcDao.listCriteriaWith(cri);			
 		};
 		
 		
