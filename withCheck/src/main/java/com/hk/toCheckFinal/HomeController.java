@@ -701,17 +701,17 @@ public class HomeController implements ServletContextAware {
 		
 	
 	//V모든 회원들의 '혼자' 하기 리스트 보기
-	@RequestMapping(value = "/boardListAlone.do", method = RequestMethod.GET)
-	public ModelAndView boardlist(Locale locale,HcCriteria cri) {
-		
+	@RequestMapping(value = "/boardList.do", method = RequestMethod.GET)
+	public ModelAndView boardlist(Locale locale, HcCriteria cri, String select1,String withh,String input2) {
 		logger.info("혼자하기 목록 {}."+cri.toString(), locale);
-		ModelAndView view = new ModelAndView();
-       
-      	 List<HcDto> list1=hcService.getAllHcListAlone(); 
-      		System.out.println("list1.size():" + list1.size());
-      	 
-      	List<HcDto> list2=hcService.listCriteriaAlone(cri);
-  		System.out.println("왔니?");
+		ModelAndView view = new ModelAndView();		
+		System.out.println("select1:"+select1);
+		System.out.println("input2:"+input2);	
+		System.out.println("withh"+withh);	
+		
+		int count = hcService.listCriteriaCount(select1,input2, withh);
+		
+      	List<HcDto> list2=hcService.listCriteria(cri,select1,input2,withh);
       	 
      	 for (int i = 0; i < list2.size(); i++) {
      		System.out.println(list2.get(i));
@@ -719,14 +719,22 @@ public class HomeController implements ServletContextAware {
 
  		HcPageMaker pageMaker = new HcPageMaker();
  		pageMaker.setCri(cri);
- 		pageMaker.setTotalCount(list1.size());
- 
- 		System.out.println(pageMaker);
+ 		pageMaker.setTotalCount(count);
+ 		if(input2==null) {
+ 			input2="";
+ 		}
+ 		if(select1==null) {
+ 			select1="ID";
+ 		}
  		
+ 		System.out.println(pageMaker);
      	 view.addObject("pageMaker", pageMaker);      	 
       	 view.addObject("list2",list2);
-      	view.addObject("cri",cri);
-      	 view.setViewName("boardListAlone");
+      	 view.addObject("select1",select1);
+      	 view.addObject("input2",input2);  
+      	 view.addObject("cri",cri);  
+     	 
+      	 view.setViewName("boardList");
 
        return view;
     }   	

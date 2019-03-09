@@ -311,13 +311,14 @@ public class HcDaoImp implements IHcDao {
 	}   	
 	
 	
-	public List<HcDto> listCriteriaAlone(HcCriteria cri){
-		System.out.println("listCriteriaAlone");																				
-		List<HcDto>list=new ArrayList<HcDto>();
 
-		list=sqlSession.selectList(namespace+"listCriteriaAlone", cri);
-		return list;		
-	};
+	
+	
+	
+	
+	
+	
+	
 	
 	public List<HcDto> listCriteriaWith(HcCriteria cri){
 		System.out.println("listCriteriaWith");																				
@@ -328,8 +329,60 @@ public class HcDaoImp implements IHcDao {
 	};
 	
 	
+
+	public List<HcDto> listCriteria(HcCriteria cri, String select1,String input2, String withh){
+		System.out.println("listCriteria");																				
+		List<HcDto>list=new ArrayList<HcDto>();
+		Map map = new HashMap();
+		
+		if(select1==null) {
+			map.put("select1", "ID");
+		}else {
+			map.put("select1", select1.toUpperCase());			
+		}
+		if(input2==null) {
+			map.put("input2", "");
+		}else {
+			map.put("input2", input2);			
+		}
+		
+		map.put("withh", withh);
+		map.put("pageStart", cri.getPageStart());
+		map.put("pageEnd", cri.getPageEnd());
+		list=sqlSession.selectList(namespace+"listCriteria", map);
+		System.out.println(list);
+		return list;		
+	};
+		
 	
 	
+	public int listCriteriaCount(String select1,String input2, String withh){
+		System.out.println("listCriteriaCount");																				
+		Map<String, String> map = new HashMap<String, String>();
+		
+		if(select1==null) {
+			map.put("select1", "ID");
+		}else {
+			map.put("select1", select1.toUpperCase());
+			System.out.println(select1);																			
+		}
+		
+		if(input2==null) {
+			map.put("input2", "");
+		}else {
+			map.put("input2", input2);	
+			System.out.println(input2);																			
+
+		}		
+		map.put("withh", withh);
+		System.out.println(map.get("withh"));
+		System.out.println(map.get("select1"));
+		System.out.println(map.get("input2"));
+		int count=sqlSession.selectOne(namespace+"listCriteriaCount", map);
+		System.out.println(count);
+		return count;		
+	};
+			
 	
 	
 	//V아이디 검색

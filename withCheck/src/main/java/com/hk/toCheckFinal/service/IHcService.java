@@ -92,8 +92,7 @@ public interface IHcService {
 	//V해당 아이디 인증 페이지들 모두 삭제
 	public boolean deleteHcInChk(String pKey,String id); 
 		
-	
-	
+	public int listCriteriaCount(String select1,String input2, String withh);
 	
 	
 	
@@ -104,11 +103,10 @@ public interface IHcService {
 	//V모든 회원들의 '함께' 하기 리스트 보기
 	public List<HcDto> getAllHcListWith();	
 		
-	public List<HcDto> listCriteriaAlone(HcCriteria cri);
+	public List<HcDto> listCriteria(HcCriteria cri, String select1,String input2, String withh);
 	
 	public List<HcDto> listCriteriaWith(HcCriteria cri);
 		
-	
 	
 	
 	

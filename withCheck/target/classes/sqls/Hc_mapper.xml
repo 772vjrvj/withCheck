@@ -5,6 +5,58 @@
 
 	<mapper namespace="com.hk.toCheckFinal">
 
+		<select id="listCriteria" resultType="HcDto" parameterType="Map" >
+		<![CDATA[
+		    SELECT B.rnum, B.PKEY, B.ID, B.TITLE, B.CONTENT, B.STDATE, B.EDDATE, B.TERM, B.REGDATE, B.ENDLIST, B.CALWITH, B.WITHH, B.PROGRESS, B.RECRUIT, B.PHOTO, B.HOST, B.HCDELETE, B.CHKCOUNT, B.SORT        
+            from(
+                 SELECT rownum as rnum, A.PKEY, A.ID, A.TITLE, A.CONTENT, A.STDATE, A.EDDATE, A.TERM, A.REGDATE, A.ENDLIST, A.CALWITH, A.WITHH, A.PROGRESS, A.RECRUIT, A.PHOTO, A.HOST, A.HCDELETE, A.CHKCOUNT, A.SORT
+                 ]]> 
+                 from (
+                      SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
+                      FROM HCDTO 
+                      
+			           WHERE CALWITH ='Y' AND ENDLIST='N' AND WITHH =#{withh} 
+				           	<if test='select1 != null and select1.equals("ID")'>
+				        AND ID like '%'||#{input2}||'%'
+				           	</if>
+				           	<if test='select1 != null and select1.equals("TITLE")'>
+				        AND TITLE like '%'||#{input2}||'%'
+				           	</if>
+				           	<if test='select1 != null and select1.equals("TERM")'>
+				        AND TERM like '%'||#{input2}||'%'
+				           	</if>
+				           	<if test='select1 != null and select1.equals("STARTDATE")'>
+				        AND STDATE like '%'||#{input2}||'%'
+				           	</if>
+                      
+                      ORDER BY REGDATE DESC      
+                      ) A
+                      <![CDATA[
+                 where rownum <= #{pageEnd} 
+                ) B
+            where B.rnum >= #{pageStart}
+			]]> 
+		</select>
+		
+		<select id="listCriteriaCount" resultType="Integer" parameterType="Map" >
+			SELECT COUNT(*)
+			FROM HCDTO 
+           	WHERE CALWITH ='Y' AND ENDLIST='N' AND WITHH =#{withh} 
+	           	<if test='select1 != null and select1.equals("ID")'>
+	        AND ID like '%'||#{input2}||'%'
+	           	</if>
+	           	<if test='select1 != null and select1.equals("TITLE")'>
+	        AND TITLE like '%'||#{input2}||'%'
+	           	</if>
+	           	<if test='select1 != null and select1.equals("TERM")'>
+	        AND TERM like '%'||#{input2}||'%'
+	           	</if>
+	           	<if test='select1 != null and select1.equals("STARTDATE")'>
+	        AND STDATE like '%'||#{input2}||'%'
+	           	</if>
+		</select>
+
+
 		<!--	VID체크 -->
 		<select id="idChk" parameterType="map" resultType="HcLoginDto">
 			SELECT ID
@@ -197,54 +249,6 @@
 
 
 
-		<select id="listCriteriaAlone" resultType="HcDto" parameterType="HcCriteria" >
-		<![CDATA[
-		    SELECT B.rnum, B.PKEY, B.ID, B.TITLE, B.CONTENT, B.STDATE, B.EDDATE, B.TERM, B.REGDATE, B.ENDLIST, B.CALWITH, B.WITHH, B.PROGRESS, B.RECRUIT, B.PHOTO, B.HOST, B.HCDELETE, B.CHKCOUNT, B.SORT        
-            from(
-                 SELECT rownum as rnum, A.PKEY, A.ID, A.TITLE, A.CONTENT, A.STDATE, A.EDDATE, A.TERM, A.REGDATE, A.ENDLIST, A.CALWITH, A.WITHH, A.PROGRESS, A.RECRUIT, A.PHOTO, A.HOST, A.HCDELETE, A.CHKCOUNT, A.SORT
-                 from (
-                      SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-                      FROM HCDTO 
-                      WHERE WITHH ='N' AND CALWITH ='Y' AND ENDLIST='N'
-                      ORDER BY REGDATE DESC      
-                      ) A
-                 where rownum <=#{pageEnd} 
-                ) B
-            where B.rnum >= #{pageStart}
-		]]>
-		</select>
-		
-		
-
-
-
-		
-		
-		
-
-		<!--	V아이디 검색 -->
-		<select id="getSearchID" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCDTO WHERE ID LIKE '%'||#{id}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-		</select> 
-	
-		<!--	V제목 검색 -->
-		<select id="getSearchTitle" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCDTO WHERE TITLE LIKE '%'||#{title}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-		</select> 
-
-		<!--	V기간 검색 -->
-		<select id="getSearchTerm" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCDTO WHERE TERM LIKE '%'||#{term}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-		</select> 
-      
-		<!--	V시작일 검색 -->
-		<select id="getSearchStartDate" parameterType="map" resultType="HcDto">
-		SELECT PKEY, ID, TITLE, CONTENT, STDATE, EDDATE, TERM, REGDATE, ENDLIST, CALWITH, WITHH, PROGRESS, RECRUIT, PHOTO, HOST, HCDELETE, CHKCOUNT, SORT
-		FROM HCDTO WHERE STDATE LIKE '%'||#{stDate}||'%' AND WITHH =#{withh} AND NOT HOST='N' AND CALWITH ='Y' AND ENDLIST='N' ORDER BY REGDATE DESC
-		</select>  
 
 		<!--	V해당일 인증해야 하는 것들 다 가지고 오기 -->
 		<select id="getHcInChk" parameterType="Map" resultType="HcInChkDto">

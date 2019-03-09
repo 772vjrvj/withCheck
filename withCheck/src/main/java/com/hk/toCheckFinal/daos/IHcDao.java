@@ -103,7 +103,7 @@ public interface IHcDao {
 	public List<HcDto> getAllHcListWith();
 	
 	
-	public List<HcDto> listCriteriaAlone(HcCriteria cri);
+	public List<HcDto> listCriteria(HcCriteria cri, String select1,String input2, String withh);
 	
 	public List<HcDto> listCriteriaWith(HcCriteria cri);
 	
@@ -152,6 +152,8 @@ public interface IHcDao {
 	
 	public List<HcLoginDto> getAllUser();
 	public boolean updateRoleUser(String id, String role,String enabled);
+
+	public int listCriteriaCount(String select1, String input2, String withh);
    
  
 

@@ -1,6 +1,9 @@
 package com.hk.toCheckFinal.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -220,9 +223,9 @@ public class HcServiceImp implements IHcService {
 		return hcDao.getAllHcListWith();
 	}
 	
-	public List<HcDto> listCriteriaAlone(HcCriteria cri){
+	public List<HcDto> listCriteria(HcCriteria cri, String select1,String input2, String withh){
     	System.out.println("HcServiceImp listCriteriaAlone");						      						    															
-		return hcDao.listCriteriaAlone(cri);		
+		return hcDao.listCriteria(cri,select1,input2,withh);		
 	};
 	
 	public List<HcDto> listCriteriaWith(HcCriteria cri){
@@ -231,7 +234,15 @@ public class HcServiceImp implements IHcService {
 		};
 		
 		
-	
+	public int listCriteriaCount(String select1,String input2, String withh){
+		
+    	System.out.println("listCriteriaCount");						      						    															
+    	System.out.println(select1);						      						    															
+    	System.out.println(input2);						      						    															
+    	System.out.println(withh);						      						    															
+
+		return hcDao.listCriteriaCount(select1,input2, withh);		
+	};	
 	
 	
 	

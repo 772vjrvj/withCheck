@@ -70,34 +70,31 @@ $(function(){
 function page(idx){
 	var page = idx;
 	var perPageNum = $("#select2 option:selected").val();
-	location.href="${pageContext.request.contextPath}/boardListAlone.do?page="+page+"&perPageNum="+perPageNum;
+	location.href="${pageContext.request.contextPath}/boardList.do?page="+page+"&perPageNum="+perPageNum+"&select1="
+			+$("select[name=select1]").val()+"&input2="+$("input[name=input2]").val()+"&withh=N";
+
 	
 }
 
-
-
-
 function search1(){
 	
-	if($("input[name=input2]").val()==null||$("input[name=input2]").val()==""){
+// 	if($("input[name=input2]").val()==null||$("input[name=input2]").val()==""){
 		
-        alert("값을 입력하세요");
-        $("input[name=input2]").focus();
-        return false;
+//         $("input[name=input2]").focus();
+//         return false;
 
-	}
-		if($("select[name=select1]").val()=="Term"){
-			if(isNaN($("input[name=input2]").val()) == true) {
-				alert("문자는 입력할 수 없습니다. 숫자를 입력하세요");
-				$("input[name=input2]").val("");
-		        $("input[name=input2]").focus();
-		        return false;
-			} else {
+// 	}
+// 		if($("select[name=select1]").val()=="Term"){
+// 			if(isNaN($("input[name=input2]").val()) == true) {
+// 				$("input[name=input2]").val("");
+// 		        $("input[name=input2]").focus();
+// 		        return false;
+// 			} else {
 
-			}
-		}	
+// 			}
+// 		}	
 	
-	location.href = "search1.do?select1="+$("select[name=select1]").val()+"&input2="
+	location.href = "${pageContext.request.contextPath}/boardList.do?page="+1+"&perPageNum="+2+"&select1="+$("select[name=select1]").val()+"&input2="
 			+$("input[name=input2]").val()+"&withh=N";
 }
 
@@ -134,14 +131,23 @@ BG.init = function(per,i) {
 $(function() {
 	$(".bar").trigger("click");
 	
-	$("#select2").val("${cri.perPageNum}");
+	select();
+
 	
+
 	$("#select2").change(function(){
 		var idx=1
 		page(idx);
 	});
 	
 });
+
+	function select(){
+		$("#select2").val("${cri.perPageNum}");
+		
+		$("#select1").val("${select1}");
+	}
+
 
 </script>
 <style type="text/css">
@@ -285,7 +291,7 @@ figure div:nth-child(3) {
 	            <option value="StartDate">시작일</option>
 			</select>
 				
-			<input type="text" id="datepicker" name="input2" style="width: 200px;" autocomplete="off" />
+			<input type="text" id="datepicker" name="input2" style="width: 200px;" autocomplete="off" value="${input2}" />
 			<input type="button" value="search" class="btn btn-default btn-xs" onclick="search1()"/>
 		</div>
 		
