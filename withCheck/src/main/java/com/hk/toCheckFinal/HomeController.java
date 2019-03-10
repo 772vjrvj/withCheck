@@ -733,7 +733,8 @@ public class HomeController implements ServletContextAware {
       	 view.addObject("select1",select1);
       	 view.addObject("input2",input2);  
       	 view.addObject("cri",cri);  
-     	 
+      	 view.addObject("withh",withh);  
+    	 
       	 view.setViewName("boardList");
 
        return view;
@@ -741,43 +742,6 @@ public class HomeController implements ServletContextAware {
 	
 
     
-	//V검색하기
-	@RequestMapping(value = "/search1.do", method = RequestMethod.GET)
-	public ModelAndView search1(String select1,String input2, String withh, Locale locale) {
-		logger.info("search1 {}.", locale);
-		ModelAndView view = new ModelAndView();
-		System.out.println("select1:"+select1);
-		System.out.println("input2:"+input2);
-
-		if(select1.equals("ID")) {
-	    	List<HcDto> list1=hcService.getSearchID(input2,withh);
-			view.addObject("list2",list1);
-
-		}else if(select1.equals("Title")) {
-			List<HcDto> list1=hcService.getSearchTitle(input2,withh);
-			System.out.println("list1"+list1);
-			view.addObject("list2",list1);			
-
-		}else if(select1.equals("Term")) {
-			List<HcDto> list1=hcService.getSearchTerm(input2,withh);
-			view.addObject("list2",list1);
-
-		}else if(select1.equals("StartDate")) {
-			List<HcDto> list1=hcService.getSearchStartDate(input2,withh);
-			view.addObject("list2",list1);
-		}
-		
-		
-		if (withh.equals("Y")) {
-			view.setViewName("boardListWith");						
-		} else {
-			view.setViewName("boardListAlone");
-		}
-		
-		return view;
-	}	
-	
-
 	
 	
 	//V모든 회원들의 '함께' 하기 리스트 보기
@@ -792,20 +756,6 @@ public class HomeController implements ServletContextAware {
 
        return view;
     } 	
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

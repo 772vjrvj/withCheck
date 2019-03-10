@@ -71,7 +71,7 @@ function page(idx){
 	var page = idx;
 	var perPageNum = $("#select2 option:selected").val();
 	location.href="${pageContext.request.contextPath}/boardList.do?page="+page+"&perPageNum="+perPageNum+"&select1="
-			+$("select[name=select1]").val()+"&input2="+$("input[name=input2]").val()+"&withh=N";
+			+$("select[name=select1]").val()+"&input2="+$("input[name=input2]").val()+"&withh=${withh}";
 
 	
 }
@@ -95,7 +95,7 @@ function search1(){
 // 		}	
 	
 	location.href = "${pageContext.request.contextPath}/boardList.do?page="+1+"&perPageNum="+2+"&select1="+$("select[name=select1]").val()+"&input2="
-			+$("input[name=input2]").val()+"&withh=N";
+			+$("input[name=input2]").val()+"&withh=${withh}";
 }
 
 </script>
@@ -331,7 +331,15 @@ figure div:nth-child(3) {
 						  		<figure>
 						    		<div class="progress-fixed__bar${status.count}"></div>
 						    		<div class="progress-fixed__percent${status.count}"></div>
-					    			<div class="pertitle"><a href="habitCalAloneDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
+						    		<c:choose>
+						    			<c:when test="${dto.withh eq 'N'}">
+							    			<div class="pertitle"><a href="habitCalAloneDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>							    			
+						    			</c:when>
+						    			<c:otherwise>
+						    				<div class="pertitle"><a href="habitCalWithDetailView.do?pKey=${dto.pKey}&id=${dto.id}">${dto.title}</a></div>	
+						    			</c:otherwise>
+						    		</c:choose>
+						    		
 						  		</figure>
 							</div>
 							

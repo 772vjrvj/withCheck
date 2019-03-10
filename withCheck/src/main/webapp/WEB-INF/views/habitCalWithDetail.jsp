@@ -216,13 +216,15 @@
 							<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteEndList.do?pKey=${dto.pKey}&id=${loginId}&which=completeList'"/>
 						</c:when>
 						<c:otherwise>
-							<c:when test="${dto.host eq 'N'}">
-								<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWith.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>
-							</c:when>
-							<c:otherwise>
-								<input type="button"  class="btn btn-default btn-xs" value="${intoPer eq dto.recruit ? '모집완료':'모집중'}" disabled/>  
-								<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWithAll.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>	                        
-							</c:otherwise>							
+							<c:choose>
+								<c:when test="${dto.host eq 'N'}">
+									<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWith.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>
+								</c:when>
+								<c:otherwise>
+									<input type="button"  class="btn btn-default btn-xs" value="${intoPer eq dto.recruit ? '모집완료':'모집중'}" disabled/>  
+									<input type="button" class="btn btn-default btn-xs" value="삭제" onclick="location.href='habitCalDeleteWithAll.do?pKey=${dto.pKey}&id=${loginId}&which=main'"/>	                        
+								</c:otherwise>
+							</c:choose>							
 						</c:otherwise>
 					</c:choose>
 						

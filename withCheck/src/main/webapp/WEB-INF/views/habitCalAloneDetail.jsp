@@ -101,8 +101,9 @@
 	      
 	   }
 	   #calendar td{
-	      width:100px;
-	      height:100px;
+	   	position:relative;
+	      width:85px;
+	      height:85px;
 	      text-align: left;
 	      vertical-align: top;
 	   }
