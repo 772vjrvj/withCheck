@@ -2,6 +2,7 @@ package com.hk.toCheckFinal.daos;
 
 import java.util.List;
 
+import com.hk.toCheckFinal.dtos.HcAnsDto;
 import com.hk.toCheckFinal.dtos.HcChkDto;
 import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
@@ -10,6 +11,26 @@ import com.hk.toCheckFinal.dtos.HcLoginDto;
 
 public interface IHcDao {
 	 
+	
+	public boolean noticeBoardInsert(HcAnsDto HcAnsDto);
+
+	public boolean noticeBoardUpdate(HcAnsDto HcAnsDto);
+
+	public List<HcAnsDto> noticeBoardList();	
+	
+	public HcAnsDto noticeBoardGet(int seq);
+	
+	public boolean noticeBoardDelete(int seq);
+	
+	public boolean replyBoardUpdate(int seq);
+	
+	public boolean replyBoardInsert(HcAnsDto HcAnsDto);
+
+	public boolean readCount(int seq);
+	
+	
+	
+	
 	//V아이디 체크
 	public HcLoginDto idChk(String id);
 	

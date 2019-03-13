@@ -100,7 +100,7 @@
          <td id="secondTd">${HcLoginDto.answer}</td>
       </tr>
       <tr>
-         <td colspan="2" style="text-align: right; ">
+         <td colspan="2" style="text-align: right;">
             <button  class="btn btn-default btn-xs"  onclick="location.href='updateform.do?id=${HcLoginDto.id}'">수정</button>
             <button  class="btn btn-default btn-xs"  onclick="location.href='deluser.do?id=${HcLoginDto.id}'">계정 삭제</button>
             <button  class="btn btn-default btn-xs"  onclick="location.href='main.do?id=${HcLoginDto.id}&role=${HcLoginDto.role}'">확인</button>

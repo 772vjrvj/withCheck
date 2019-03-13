@@ -5,6 +5,11 @@
 
 	<mapper namespace="com.hk.toCheckFinal">
 
+
+
+
+
+
 		<select id="listCriteria" resultType="HcDto" parameterType="Map" >
 		<![CDATA[
 		    SELECT B.rnum, B.PKEY, B.ID, B.TITLE, B.CONTENT, B.STDATE, B.EDDATE, B.TERM, B.REGDATE, B.ENDLIST, B.CALWITH, B.WITHH, B.PROGRESS, B.RECRUIT, B.PHOTO, B.HOST, B.HCDELETE, B.CHKCOUNT, B.SORT        
@@ -145,6 +150,57 @@
         INSERT INTO HCDTO
         VALUES (#{pKey},#{id},#{title},#{content},#{stDate},#{edDate},#{term},SYSDATE,'N',#{calWith},#{progress},#{withh},#{recruit},#{photo},#{host},'N','0','1')
 		</insert>
+
+
+
+
+		<insert id="noticeBoardInsert" parameterType="HcAnsDto">
+        INSERT INTO HKANSWERBOARD (SEQ,ID,TITLE,CONTENT,REGDATE,REFER,STEP,DEPTH,READCOUNT,DELFLAG)
+		VALUES (HKANSWERBOARD_SEQ.NEXTVAL,#{id},#{title},#{content},SYSDATE,(SELECT NVL(MAX(REFER)+1,0) FROM HKANSWERBOARD),0,0,0,'N')
+        </insert>	
+
+		<update id="noticeBoardUpdate" parameterType="HcAnsDto">
+		UPDATE HKANSWERBOARD SET TITLE=#{title}, CONTENT=#{content}, REGDATE=SYSDATE
+		WHERE SEQ=#{seq}
+        </update>	
+
+		<select id="noticeBoardList" resultType="HcAnsDto">
+		SELECT SEQ, ID, TITLE, CONTENT, REGDATE,REFER,STEP,DEPTH,READCOUNT,DELFLAG
+		FROM HKANSWERBOARD WHERE DELFLAG = 'N' ORDER BY REFER, STEP
+		
+		</select>
+
+		<select id="noticeBoardGet" parameterType="Integer" resultType="HcAnsDto">
+		SELECT SEQ, ID, TITLE, CONTENT, REGDATE,REFER,STEP,DEPTH,READCOUNT,DELFLAG
+		FROM HKANSWERBOARD WHERE SEQ=#{seq}
+		</select>
+
+		<update id="noticeBoardDelete" parameterType="Integer" >
+		UPDATE HKANSWERBOARD SET DELFLAG='Y' WHERE SEQ=#{seq}
+		</update>
+		
+		<update id="replyBoardUpdate" parameterType="Integer" >
+		UPDATE HKANSWERBOARD SET STEP= STEP+1
+		WHERE REFER=(SELECT REFER FROM HKANSWERBOARD WHERE SEQ=#{seq})
+		AND STEP > (SELECT STEP FROM HKANSWERBOARD WHERE SEQ=#{seq})
+		</update>
+		
+		<insert id="replyBoardInsert" parameterType="HcAnsDto">
+		INSERT INTO HKANSWERBOARD VALUES( HKANSWERBOARD_SEQ.NEXTVAL,#{id},#{title},#{content},SYSDATE,
+					(SELECT REFER FROM HKANSWERBOARD WHERE SEQ=#{seq}),
+					(SELECT STEP FROM HKANSWERBOARD WHERE SEQ=#{seq})+1,
+					(SELECT DEPTH FROM HKANSWERBOARD WHERE SEQ=#{seq})+1,0,'N')
+        </insert>	
+		
+		<update id="readCount" parameterType="Integer" >
+		UPDATE HKANSWERBOARD SET READCOUNT=READCOUNT+1 WHERE SEQ=#{seq}
+		</update>
+
+
+
+		
+
+
 
 		<!--	V함께하기를 만들면 각 날짜의 아이디의 인증 페이지 필요 insertHcInChk -->
 		<insert id="insertHcInChk" parameterType="HcInChkDto">

@@ -16,7 +16,6 @@
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 <link rel="stylesheet" href="css/slider.css">
 <script src="js/slider.js"></script>
-
 <script type="text/javascript">
 	$(function(){
 		if($("#switchCheck").attr("checked")=="checked")   {

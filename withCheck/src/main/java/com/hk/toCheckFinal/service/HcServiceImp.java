@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hk.toCheckFinal.daos.IHcDao;
+import com.hk.toCheckFinal.dtos.HcAnsDto;
 import com.hk.toCheckFinal.dtos.HcChkDto;
 import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
@@ -18,6 +19,55 @@ import com.hk.toCheckFinal.dtos.HcLoginDto;
 @Service
 public class HcServiceImp implements IHcService {
 
+	
+	
+	@Override
+	public boolean noticeBoardInsert(HcAnsDto HcAnsDto) {
+		System.out.println("noticeBoardInsert");
+	   return hcDao.noticeBoardInsert(HcAnsDto);
+	}	
+	
+
+	public boolean noticeBoardUpdate(HcAnsDto HcAnsDto) {
+		System.out.println("noticeBoardUpdate");
+		   return hcDao.noticeBoardUpdate(HcAnsDto);
+	}
+
+	public List<HcAnsDto> noticeBoardList(){
+		System.out.println("noticeBoardList");
+		   return hcDao.noticeBoardList();
+	}
+	
+	public HcAnsDto noticeBoardGet(int seq) {
+		System.out.println("noticeBoardGet");
+		   return hcDao.noticeBoardGet(seq);
+	}
+	
+	public boolean noticeBoardDelete(int seq) {
+		System.out.println("noticeBoardDelete");
+		   return hcDao.noticeBoardDelete(seq);
+	}
+	
+	public boolean replyBoardUpdate(int seq) {
+		System.out.println("replyBoardUpdate");
+		   return hcDao.replyBoardUpdate(seq);
+	}
+	
+	public boolean replyBoardInsert(HcAnsDto HcAnsDto) {
+		System.out.println("replyBoardInsert");
+		   return hcDao.replyBoardInsert(HcAnsDto);
+	}
+
+	public boolean readCount(int seq) {
+		System.out.println("readCount");
+		   return hcDao.readCount(seq);		
+	}
+		
+
+	
+	
+	
+	
 	//V
 	@Autowired
 	private IHcDao hcDao;   
@@ -29,6 +79,7 @@ public class HcServiceImp implements IHcService {
 	   return hcDao.idChk(id);
 	}
    
+
 	//V회원가입
     @Override
     public boolean insertUser(HcLoginDto dto) {

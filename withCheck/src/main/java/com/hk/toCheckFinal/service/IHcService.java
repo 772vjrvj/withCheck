@@ -2,6 +2,7 @@ package com.hk.toCheckFinal.service;
 
 import java.util.List;
 
+import com.hk.toCheckFinal.dtos.HcAnsDto;
 import com.hk.toCheckFinal.dtos.HcChkDto;
 import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
@@ -52,8 +53,32 @@ public interface IHcService {
 	//V로그인한 유저 한명의 종료되지 않은 리스트
 	public List<HcDto> getAllList(String id);
 		
+	public boolean noticeBoardInsert(HcAnsDto HcAnsDto);
+
+	public boolean noticeBoardUpdate(HcAnsDto HcAnsDto);
+
+	public List<HcAnsDto> noticeBoardList();	
+	
+	public HcAnsDto noticeBoardGet(int seq);
+	
+	public boolean noticeBoardDelete(int seq);
+	
+	public boolean replyBoardUpdate(int seq);
+	
+	public boolean replyBoardInsert(HcAnsDto HcAnsDto);
+
+	public boolean readCount(int seq);
+		
+
+	
 	//V습관달력 만들기 값 입력 habitCalInsert
 	public boolean habitCalInsert(HcDto dto);
+	
+	
+	
+	
+	
+	
 	
 	//V참가한 사람 그 습관달력의 모든 기간에 대한 상세인증페이지 만들기
 	public boolean insertHcInChk(HcInChkDto HcInChkDto);

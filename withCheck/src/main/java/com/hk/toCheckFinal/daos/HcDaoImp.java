@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.hk.toCheckFinal.dtos.HcAnsDto;
 import com.hk.toCheckFinal.dtos.HcChkDto;
 import com.hk.toCheckFinal.dtos.HcCriteria;
 import com.hk.toCheckFinal.dtos.HcDto;
@@ -18,6 +19,76 @@ import com.hk.toCheckFinal.dtos.HcLoginDto;
 @Repository
 public class HcDaoImp implements IHcDao {
 
+	@Override	
+	public boolean noticeBoardInsert(HcAnsDto HcAnsDto) {
+		System.out.println("noticeBoardInsert");
+		int count = 0;
+		count=sqlSession.insert(namespace+"noticeBoardInsert", HcAnsDto);
+		return count > 0 ? true : false;
+	}
+
+	@Override	
+	public boolean noticeBoardUpdate(HcAnsDto HcAnsDto) {
+		System.out.println("noticeBoardUpdate");
+		int count = 0;
+		count=sqlSession.update(namespace+"noticeBoardUpdate", HcAnsDto);
+		return count > 0 ? true : false;
+	}
+
+	@Override	
+	public List<HcAnsDto> noticeBoardList() {
+		System.out.println("noticeBoardList");
+		List<HcAnsDto>list=new ArrayList<HcAnsDto>();
+		list=sqlSession.selectList(namespace+"noticeBoardList");
+		return list;
+	}   		
+
+	@Override
+	public HcAnsDto noticeBoardGet(int seq) {
+		System.out.println("noticeBoardGet");
+		return sqlSession.selectOne(namespace+"noticeBoardGet", seq);
+	}	
+
+	@Override	
+	public boolean noticeBoardDelete(int seq) {
+		System.out.println("noticeBoardDelete");
+		int count = 0;
+		count=sqlSession.update(namespace+"noticeBoardDelete", seq);
+		return count > 0 ? true : false;
+	}
+	
+
+	@Override	
+	public boolean replyBoardUpdate(int seq) {
+		System.out.println("replyBoardUpdate");
+		int count = 0;
+		count=sqlSession.update(namespace+"replyBoardUpdate", seq);
+		return count > 0 ? true : false;
+	}
+
+	@Override	
+	public boolean replyBoardInsert(HcAnsDto HcAnsDto) {
+		System.out.println("replyBoardInsert");
+		int count = 0;
+		count=sqlSession.insert(namespace+"replyBoardInsert", HcAnsDto);
+		return count > 0 ? true : false;
+	}	
+	
+	public boolean readCount(int seq) {
+		System.out.println("readCount");
+		int count = 0;
+		count=sqlSession.insert(namespace+"readCount", seq);
+		return count > 0 ? true : false;		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//V
 	@Autowired
 	private SqlSessionTemplate sqlSession;
